@@ -1,0 +1,102 @@
+<html>
+<head> 
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QR Code Scanner</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/jsqr/dist/jsQR.js"></script>
+<script>
+tailwind.config = {
+  theme: {
+    extend: {
+      colors: {
+        'custom-blue': '#1e3a8a',
+        'custom-light-blue': '#3b82f6',
+        'custom-gray': '#f3f4f6',
+        'custom-green': '#10b981',
+        'custom-red': '#ef4444',
+      }
+    }
+  }
+}
+</script>
+</head>
+<body class="bg-gradient-to-r from-blue-100 to-blue-300 min-h-screen flex items-center justify-center p-4">
+
+    <div class="bg-white p-8 rounded-lg shadow-2xl max-w-md w-full transform transition duration-500 hover:scale-105 hover:shadow-3xl">
+        <h1 class="text-4xl font-bold mb-6 text-center text-custom-blue">QR Code Scanner</h1>
+        
+        <!-- Section for file input -->
+        <div class="mb-6">
+            <label for="file-input" class="block text-lg font-medium text-custom-blue mb-3">Upload QR Code Image</label>
+            <input type="file" id="file-input" accept="image/*" class="block w-full text-sm text-gray-500
+                file:mr-4 file:py-2 file:px-4
+                file:rounded-lg file:border-0
+                file:text-sm file:font-semibold
+                file:bg-blue-50 file:text-custom-blue
+                hover:file:bg-blue-100 cursor-pointer
+                transition duration-300">
+        </div>
+        
+        <!-- Button to start scan -->
+        <button id="start-scan" class="w-full bg-gradient-to-r from-custom-blue to-custom-light-blue text-white font-bold py-2 px-4 rounded-lg hover:from-blue-700 hover:to-blue-500 transition duration-300 ease-in-out transform hover:scale-105 shadow-md">
+            Start Scan
+        </button>
+        
+        <!-- Section for result display -->
+        <div id="result" class="mt-6 text-center text-custom-blue hidden text-lg font-semibold"></div>
+    </div>
+
+    <script>
+        document.getElementById('start-scan').addEventListener('click', () => {
+            const fileInput = document.getElementById('file-input');
+            if (fileInput.files.length === 0) {
+                showResult('Please select a file first.', 'error');
+                return;
+            }
+            const file = fileInput.files[0];
+            const img = new Image();
+            img.crossOrigin = 'Anonymous';
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                img.src = event.target.result;
+                img.onload = () => {
+                    scanQRCode(img);
+                };
+            };
+            reader.readAsDataURL(file);
+        });
+
+        function scanQRCode(img) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            ctx.drawImage(img, 0, 0, img.width, img.height);
+
+            const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+            const code = jsQR(imageData.data, canvas.width, canvas.height, {
+                inversionAttempts: "dontInvert",
+            });
+
+            if (code) {
+                const url = code.data;
+                showResult(`QR Code scanned successfully! Redirecting to: ${url}`, 'success');
+                setTimeout(() => {
+                    window.location.href = url;
+                }, 3000);
+            } else {
+                showResult('No QR code found. Please try another image.', 'error');
+            }
+        }
+
+        function showResult(message, type) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = message;
+            resultDiv.classList.remove('hidden', 'text-green-600', 'text-red-600');
+            resultDiv.classList.add(type === 'success' ? 'text-custom-green' : 'text-custom-red');
+            resultDiv.classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>

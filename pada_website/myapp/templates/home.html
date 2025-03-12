@@ -1,0 +1,212 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="{% static 'css/home.css' %}" />
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css"rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../templates/styles.css" />
+  
+  </head>
+  <body>
+    <div class="wave"></div>
+     <div class="wave"></div>
+     <div class="wave"></div>
+    <nav>
+      <div class="nav__header">
+        <div class="nav__logo">
+          <a href="#">PADA<span> GEOLOCALISATION</span>.</a>
+        </div>
+        <div class="nav__menu__btn" id="menu-btn">
+          <span><i class="ri-menu-line"></i></span>
+        </div>
+      </div>
+    </nav>
+    <header class="flex flex-row mx-14 my-3">
+      <div class="header__content my-5">
+        <h1>Bienvenue <br /><span>USER,</span> sur la plateforme</h1>
+        <p>
+          <h3><span class="text-2xl font-bold mb-4 text-center text-white transition-all py-2 px-4 rounded-lg bg-gray-900 shadow-md hover:shadow-lg hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-700">Description de la rue</span></h3> <br> 
+          {{description_rue}}
+        </p>
+        <form action="{% url 'redirect_view' %}" method="post">
+          <div class="input__row">
+            <div class="input__group">
+              <h5>Commune</h5>
+              <div>
+                <span><i class="ri-chat-smile-3-fill"></i></span>
+                <input type="text" placeholder="{{commune_rue}}" />
+              </div>
+            </div>
+            <div class="input__group">
+              <h5>Nom Rue</h5>
+              <div>
+                <span><i class="ri-map-pin-2-fill"></i></span>
+                <input type="text" placeholder="{{nom_rue}}" />
+              </div>
+            </div>
+            <div class="input__group">
+              <h5>Quartier</h5>
+              <div>
+                <span><i class="ri-map-pin-line"></i></span>
+                <input type="text" placeholder="{{quartier_rue}}" />
+              </div>
+            </div>
+          </div>
+        </form>
+        <div class="bar">
+          Copyright © 2024 Web Design Pelestrom. All rights reserved.
+        </div>
+      </div>
+
+      <div class="flex h-14 w-full">
+          <!-- Section de la carte -->
+<div class="w-full mx-14 p-6">
+  <h1 class="text-2xl font-bold mb-4 text-center text-white transition-all py-2 px-4 rounded-lg bg-gray-900 shadow-md hover:shadow-lg hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-700">
+      Carte OpenStreetMap
+  </h1>
+  <div id="map" class="h-96 w-full rounded-2xl shadow-3xl max-h-96 overflow-hidden">
+      <!-- La carte OpenStreetMap sera affichée ici -->
+  </div>
+  <script>
+    var x = "{{ x|escapejs }}";  // Coordonnée x
+    var y = "{{ y|escapejs }}";  // Coordonnée y
+    var h = "{{ h|escapejs }}";  // Niveau de zoom
+  
+    var map = L.map('map').setView([x, y], h);
+  
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+  
+    // Ajout du marqueur à la position spécifiée
+    L.marker([x, y]).addTo(map)
+      //.bindPopup("Localisation des coordonnées fournies.")
+      .openPopup();
+
+    // Ajout d'un cercle pour indiquer l'approximatif de la zone autour du marqueur
+    L.circle([x, y], {
+        radius: 200,  // Rayon en mètres (tu peux ajuster cette valeur selon la précision désirée)
+        //color: 'blue',  // Couleur du contour du cercle
+        fillColor: '#cceeff',  // Couleur de remplissage du cercle
+        fillOpacity: 0.5  // Opacité du remplissage
+    }).addTo(map);
+
+</script>
+
+</div>
+          <!-- Section du bouton -->
+      </div>
+    </header>
+    <script src="https://unpkg.com/scrollreveal"></script>
+    <script>
+const menuBtn = document.getElementById("menu-btn");
+const navLinks = document.getElementById("nav-links");
+const menuBtnIcon = menuBtn.querySelector("i");
+
+menuBtn.addEventListener("click", (e) => {
+  navLinks.classList.toggle("open");
+
+  const isOpen = navLinks.classList.contains("open");
+  menuBtnIcon.setAttribute("class", isOpen ? "ri-close-line" : "ri-menu-line");
+});
+
+navLinks.addEventListener("click", (e) => {
+  navLinks.classList.remove("open");
+  menuBtnIcon.setAttribute("class", "ri-menu-line");
+});
+
+const scrollRevealOption = {
+  distance: "50px",
+  origin: "bottom",
+  duration: 1000,
+};
+
+ScrollReveal().reveal(".header__image img", {
+  ...scrollRevealOption,
+  origin: "right",
+});
+
+ScrollReveal().reveal(".header__content h1", {
+  ...scrollRevealOption,
+  delay: 500,
+});
+
+ScrollReveal().reveal(".header__content p", {
+  ...scrollRevealOption,
+  delay: 1000,
+});
+
+ScrollReveal().reveal(".header__content form", {
+  ...scrollRevealOption,
+  delay: 1500,
+});
+
+ScrollReveal().reveal(".header__content .bar", {
+  ...scrollRevealOption,
+  delay: 2000,
+});
+
+ScrollReveal().reveal(".header__image__card", {
+  duration: 1000,
+  interval: 500,
+  delay: 2500,
+}
+</body>
+ 
+    <!-- script map -->
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script>
+    var x = "{{ x|escapejs }}";  // Coordonnée x
+    var y = "{{ y|escapejs }}";  // Coordonnée y
+    var h = "{{ h|escapejs }}";  // Niveau de zoom
+
+    // Initialiser la carte avec les coordonnées spécifiées et le niveau de zoom
+    var map = L.map('map').setView([x, y], h);
+
+    // Ajouter la couche de tuiles OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Ajouter un marqueur à la position x, y avec un popup
+    L.marker([x, y]).addTo(map)
+        .bindPopup("Emplacement sélectionné.")
+        .openPopup();
+
+    // Géolocalisation avec bouton (facultatif)
+    var locateButton = document.getElementById('locate-button');
+
+    locateButton.addEventListener('click', function() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var lat = position.coords.latitude;
+                var lon = position.coords.longitude;
+                var accuracy = position.coords.accuracy;
+
+                map.setView([lat, lon], 30);
+
+                L.marker([lat, lon]).addTo(map)
+                    .bindPopup("Vous êtes ici.")
+                    .openPopup();
+
+                L.circle([lat, lon], { radius: accuracy }).addTo(map);
+            }, function(error) {
+                alert("Erreur lors de l'obtention de la position : " + error.message);
+            }, {
+                enableHighAccuracy: true, // Demande une meilleure précision
+                timeout: 5000,             // Délai d'attente maximal
+                maximumAge: 0              // Ne pas utiliser de position mise en cache
+            });
+        } else {
+            alert("La géolocalisation n'est pas supportée par ce navigateur.");
+        }
+    });
+</script>
+  </body>
+ 
+</html>
