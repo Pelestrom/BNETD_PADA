@@ -1,17 +1,18 @@
 from django.db import models
 
-class Rue(models.Model):
-    nom_rue = models.CharField(max_length=100)
-    quartier = models.CharField(max_length=100)
-    commune = models.CharField(max_length=100)
-    x = models.FloatField()
-    y = models.FloatField()
-    h = models.IntegerField()
-    description = models.TextField()
-    # url = models.CharField(max_length=200) 
+class Voie(models.Model):
+    id = models.AutoField(primary_key=True)
+    nom_voies = models.CharField(max_length=255)  # character varying
+    quartier = models.CharField(max_length=255)
+    X = models.CharField(max_length=255)  # character varying
+    Y = models.CharField(max_length=255)  # character varying
+    qr_code = models.TextField()
+    description = models.CharField(max_length=255)  # character varying
+    entites_territoriales_2 = models.TextField()
+
+    class Meta:
+        db_table = 'panneautage'  # Remplace par le nom réel de ta table
+        managed = False  # Empêche Django de gérer la création/suppression de la table
 
     def __str__(self):
-        return f"{self.nom_rue} - {self.quartier}"
-
-
- 
+        return f"{self.nom_voies} - {self.quartier}"

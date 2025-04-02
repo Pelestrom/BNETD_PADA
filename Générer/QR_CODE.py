@@ -1,7 +1,7 @@
 import qrcode  # type: ignore
 
 # URL avec niveau de zoom
-url = f"http://127.0.0.1:8000/home/?id=4"
+url = f"http://192.168.90.42:8000/3"
 
 # Création de l'objet QRCode
 qr = qrcode.QRCode(
@@ -16,7 +16,7 @@ qr.add_data(url)
 qr.make(fit=True)
 
 # Création d'une image du code QR (vous devez avoir installé la bibliothèque Pillow)
-img = qr.make_image(fill_color="red", back_color="white")
+img = qr.make_image(fill_color="MidnightBlue", back_color="white")
 
 # Enregistrement de l'image du code QR dans un fichier
-img.save("4.png")
+img.save("3.png")

@@ -1,212 +1,525 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <link rel="stylesheet" href="{% static 'css/home.css' %}" />
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css"rel="stylesheet"/>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="../templates/styles.css" />
-  
-  </head>
-  <body>
-    <div class="wave"></div>
-     <div class="wave"></div>
-     <div class="wave"></div>
-    <nav>
-      <div class="nav__header">
-        <div class="nav__logo">
-          <a href="#">PADA<span> GEOLOCALISATION</span>.</a>
-        </div>
-        <div class="nav__menu__btn" id="menu-btn">
-          <span><i class="ri-menu-line"></i></span>
-        </div>
-      </div>
-    </nav>
-    <header class="flex flex-row mx-14 my-3">
-      <div class="header__content my-5">
-        <h1>Bienvenue <br /><span>USER,</span> sur la plateforme</h1>
-        <p>
-          <h3><span class="text-2xl font-bold mb-4 text-center text-white transition-all py-2 px-4 rounded-lg bg-gray-900 shadow-md hover:shadow-lg hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-700">Description de la rue</span></h3> <br> 
-          {{description_rue}}
-        </p>
-        <form action="{% url 'redirect_view' %}" method="post">
-          <div class="input__row">
-            <div class="input__group">
-              <h5>Commune</h5>
-              <div>
-                <span><i class="ri-chat-smile-3-fill"></i></span>
-                <input type="text" placeholder="{{commune_rue}}" />
-              </div>
-            </div>
-            <div class="input__group">
-              <h5>Nom Rue</h5>
-              <div>
-                <span><i class="ri-map-pin-2-fill"></i></span>
-                <input type="text" placeholder="{{nom_rue}}" />
-              </div>
-            </div>
-            <div class="input__group">
-              <h5>Quartier</h5>
-              <div>
-                <span><i class="ri-map-pin-line"></i></span>
-                <input type="text" placeholder="{{quartier_rue}}" />
-              </div>
-            </div>
-          </div>
-        </form>
-        <div class="bar">
-          Copyright © 2024 Web Design Pelestrom. All rights reserved.
-        </div>
-      </div>
-
-      <div class="flex h-14 w-full">
-          <!-- Section de la carte -->
-<div class="w-full mx-14 p-6">
-  <h1 class="text-2xl font-bold mb-4 text-center text-white transition-all py-2 px-4 rounded-lg bg-gray-900 shadow-md hover:shadow-lg hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-700">
-      Carte OpenStreetMap
-  </h1>
-  <div id="map" class="h-96 w-full rounded-2xl shadow-3xl max-h-96 overflow-hidden">
-      <!-- La carte OpenStreetMap sera affichée ici -->
-  </div>
-  <script>
-    var x = "{{ x|escapejs }}";  // Coordonnée x
-    var y = "{{ y|escapejs }}";  // Coordonnée y
-    var h = "{{ h|escapejs }}";  // Niveau de zoom
-  
-    var map = L.map('map').setView([x, y], h);
-  
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
-  
-    // Ajout du marqueur à la position spécifiée
-    L.marker([x, y]).addTo(map)
-      //.bindPopup("Localisation des coordonnées fournies.")
-      .openPopup();
-
-    // Ajout d'un cercle pour indiquer l'approximatif de la zone autour du marqueur
-    L.circle([x, y], {
-        radius: 200,  // Rayon en mètres (tu peux ajuster cette valeur selon la précision désirée)
-        //color: 'blue',  // Couleur du contour du cercle
-        fillColor: '#cceeff',  // Couleur de remplissage du cercle
-        fillOpacity: 0.5  // Opacité du remplissage
-    }).addTo(map);
-
-</script>
-
-</div>
-          <!-- Section du bouton -->
-      </div>
-    </header>
-    <script src="https://unpkg.com/scrollreveal"></script>
-    <script>
-const menuBtn = document.getElementById("menu-btn");
-const navLinks = document.getElementById("nav-links");
-const menuBtnIcon = menuBtn.querySelector("i");
-
-menuBtn.addEventListener("click", (e) => {
-  navLinks.classList.toggle("open");
-
-  const isOpen = navLinks.classList.contains("open");
-  menuBtnIcon.setAttribute("class", isOpen ? "ri-close-line" : "ri-menu-line");
-});
-
-navLinks.addEventListener("click", (e) => {
-  navLinks.classList.remove("open");
-  menuBtnIcon.setAttribute("class", "ri-menu-line");
-});
-
-const scrollRevealOption = {
-  distance: "50px",
-  origin: "bottom",
-  duration: 1000,
-};
-
-ScrollReveal().reveal(".header__image img", {
-  ...scrollRevealOption,
-  origin: "right",
-});
-
-ScrollReveal().reveal(".header__content h1", {
-  ...scrollRevealOption,
-  delay: 500,
-});
-
-ScrollReveal().reveal(".header__content p", {
-  ...scrollRevealOption,
-  delay: 1000,
-});
-
-ScrollReveal().reveal(".header__content form", {
-  ...scrollRevealOption,
-  delay: 1500,
-});
-
-ScrollReveal().reveal(".header__content .bar", {
-  ...scrollRevealOption,
-  delay: 2000,
-});
-
-ScrollReveal().reveal(".header__image__card", {
-  duration: 1000,
-  interval: 500,
-  delay: 2500,
-}
-</body>
- 
-    <!-- script map -->
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-<script>
-    var x = "{{ x|escapejs }}";  // Coordonnée x
-    var y = "{{ y|escapejs }}";  // Coordonnée y
-    var h = "{{ h|escapejs }}";  // Niveau de zoom
-
-    // Initialiser la carte avec les coordonnées spécifiées et le niveau de zoom
-    var map = L.map('map').setView([x, y], h);
-
-    // Ajouter la couche de tuiles OpenStreetMap
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
-
-    // Ajouter un marqueur à la position x, y avec un popup
-    L.marker([x, y]).addTo(map)
-        .bindPopup("Emplacement sélectionné.")
-        .openPopup();
-
-    // Géolocalisation avec bouton (facultatif)
-    var locateButton = document.getElementById('locate-button');
-
-    locateButton.addEventListener('click', function() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-                var lat = position.coords.latitude;
-                var lon = position.coords.longitude;
-                var accuracy = position.coords.accuracy;
-
-                map.setView([lat, lon], 30);
-
-                L.marker([lat, lon]).addTo(map)
-                    .bindPopup("Vous êtes ici.")
-                    .openPopup();
-
-                L.circle([lat, lon], { radius: accuracy }).addTo(map);
-            }, function(error) {
-                alert("Erreur lors de l'obtention de la position : " + error.message);
-            }, {
-                enableHighAccuracy: true, // Demande une meilleure précision
-                timeout: 5000,             // Délai d'attente maximal
-                maximumAge: 0              // Ne pas utiliser de position mise en cache
-            });
-        } else {
-            alert("La géolocalisation n'est pas supportée par ce navigateur.");
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            background-color: #f8fafc;
         }
-    });
-</script>
-  </body>
- 
+        nav {
+            position: fixed;
+            top: 0.2rem;
+            left: 0.5rem;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0 1rem;
+        }
+        nav img {
+            width: 100px;
+            height: auto;
+            transition: transform 0.3s ease;
+        }
+        nav img:hover {
+            transform: scale(1.1);
+        }
+        .share-btn {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            z-index: 1000;
+            display: flex;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+            background-color: #fff;
+            border: 1px solid rgba(128, 128, 128, 0.705);
+            border-radius: 50%;
+            transition: transform 0.3s ease-in-out, background-color 0.3s ease;
+            padding: 10px;
+            width: 50px;
+            height: 50px;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .share-btn:hover {
+            background: #f1f1f1;
+            transform: scale(1.1);
+        }
+        .share-btn svg {
+            transition: transform 0.3s ease;
+        }
+        .share-btn:active svg {
+            transform: scale(0.9);
+        }
+        .share-menu {
+            position: fixed;
+            top: 70px;
+            right: 1rem;
+            display: none;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+            gap: 10px;
+        }
+        .share-menu.active {
+            display: flex;
+        }
+        .card {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 50%;
+            box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            opacity: 0;
+            transform: translateY(20px) scale(0.8);
+            pointer-events: none;
+            position: relative;
+            overflow: hidden;
+            padding: 0;
+            border: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.3);
+            transform: scale(0);
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+        .card:active::before {
+            transform: scale(2);
+            opacity: 0;
+        }
+        .card.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+        }
+        .card:hover {
+            transform: scale(1.1) translateY(0);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .card img {
+            width: 28px;
+            height: 28px;
+            transition: transform 0.2s ease;
+            pointer-events: none;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+        .card:active img {
+            transform: scale(0.9);
+        }
+        /* Zone cliquable étendue */
+        .card::after {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+        }
+        header {
+            padding: 1rem;
+            margin-top: 12rem;
+            flex: 1;
+        }
+        .header__content {
+            margin-bottom: 2rem;
+        }
+        .header__content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: white;
+            margin-top: 1.5rem;
+            background-color: #0f172a;
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            text-align: center;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        .header__content h3:hover {
+            background-color: #1e293b;
+            transform: translateY(-2px);
+        }
+        .header__content p {
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            color: #0f172a;
+        }
+        .input__row {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .input__group {
+            display: flex;
+            flex-direction: column;
+        }
+        .input__group h5 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            color: #0f172a;
+            font-weight: bold;
+        }
+        .input__group div {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem;
+            border: none;
+            background: transparent;
+        }
+        .input__group div span {
+            margin-right: 0.75rem;
+        }
+        .input__group input {
+            border: none;
+            outline: none;
+            flex: 1;
+            font-size: 1.25rem;
+            background: transparent;
+            color: #0f172a;
+        }
+        footer {
+            background-color: transparent;
+            color: #0f172a;
+            text-align: center;
+            padding: 1rem;
+            font-size: 0.875rem;
+        }
+        #map {
+            height: 600px;
+            margin-top: 1rem;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
+        }
+        #map:hover {
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+            transform: translateY(-2px);
+        }
+        .leaflet-control-custom {
+            background: white;
+            border-radius: 5px;
+            padding: 5px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .leaflet-control-custom:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+        .leaflet-control-custom button {
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+        .leaflet-control-custom button i {
+            font-size: 1.5rem;
+            color: #0f172a;
+        }
+        .leaflet-control-custom .layer-menu {
+            display: none;
+            position: absolute;
+            left: 80%;
+            top: 0;
+            margin-left: 1px;
+            background: white;
+            padding: 0.1rem;
+            border-radius: 0.1rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            flex-direction: row;
+            gap: 0.1rem;
+        }
+        .leaflet-control-custom.active .layer-menu {
+            display: flex;
+        }
+        .layer-button {
+            width: 40px;
+            height: 40px;
+            background: white;
+            border: none;
+            border-radius: 0.5rem;
+            padding: 0;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .layer-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        .layer-button img {
+            width: 100%;
+            height: 100%;
+            border-radius: 0.5rem;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <img src="{% static 'image/logo3.png' %}" alt="PADA">
+        <div class="share-btn" onclick="toggleShareMenu()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="50px" height="50px" fill="currentColor" class="w-6 h-6">
+                <path fill-rule="evenodd" d="M15.75 4.5a3 3 0 11.825 2.066l-8.421 4.679a3.002 3.002 0 010 1.51l8.421 4.679a3 3 0 11-.729 1.31l-8.421-4.678a3 3 0 110-4.132l8.421-4.679a3 3 0 01-.096-.755z" clip-rule="evenodd" />
+            </svg>
+        </div>
+    </nav>
+
+    <div class="share-menu" id="shareMenu">
+        <button class="card whatsapp">
+            <img src="{% static 'image/whatsapp.png' %}" alt="WhatsApp">
+        </button>
+        <button class="card instagram">
+            <img src="{% static 'image/instagram.png' %}" alt="Instagram">
+        </button>
+        <button class="card facebook">
+            <img src="{% static 'image/facebook.png' %}" alt="Facebook">
+        </button>
+        <button class="card email">
+            <img src="{% static 'image/gmail.png' %}" alt="Email">
+        </button>
+        <button class="card sms">
+            <img src="{% static 'image/sms.png' %}" alt="SMS">
+        </button>
+    </div>
+
+    <header>
+        <div id="map" class="rounded-2xl shadow-3xl overflow-hidden"></div>
+        <div class="header__content">
+            <h3 class="text-xl font-bold mb-4 text-center text-white py-2 px-4 rounded-lg bg-blue-900">
+                Description de la rue
+            </h3>
+            <p>{{ description_voie }}</p>
+            <form action="{% url 'redirect_view' %}" method="post">
+                <div class="input__row">
+                    <div class="input__group">
+                        <h5>Commune</h5>
+                        <div>
+                            <span><i class="ri-building-fill"></i></span>
+                            <input type="text" placeholder="{{ entites_territoriales_2 }}" readonly />
+                        </div>
+                    </div>
+                    <div class="input__group">
+                        <h5>Nom Rue</h5>
+                        <div>
+                            <span><i class="ri-road-map-fill"></i></span>
+                            <input type="text" placeholder="{{ nom_voies }}" readonly />
+                        </div>
+                    </div>
+                    <div class="input__group">
+                        <h5>Quartier</h5>
+                        <div>
+                            <span><i class="ri-community-fill"></i></span>
+                            <input type="text" placeholder="{{ quartier }}" readonly />
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </header>
+
+    <footer>
+        Copyright © 2025 PROJET D'ADRESSAGE DE LA VILLE D'ABIDJAN.
+    </footer>
+
+    <script>
+        var x = parseFloat("{{ X|escapejs }}");
+        var y = parseFloat("{{ Y|escapejs }}");
+        var staticZoom = 18;
+
+        var map = L.map('map').setView([y, x], staticZoom);
+
+        var openStreetMap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        var googleSatellite = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+            maxZoom: 19,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+            attribution: '&copy; <a href="https://www.google.com/intl/en/permissions/geoguidelines/">Google Maps</a>'
+        });
+
+        var layerControl = L.Control.extend({
+            onAdd: function(map) {
+                var container = L.DomUtil.create('div', 'leaflet-control-custom');
+                var button = L.DomUtil.create('button', '', container);
+                button.innerHTML = '<i class="ri-map-2-fill"></i>';
+                var menu = L.DomUtil.create('div', 'layer-menu', container);
+                menu.innerHTML = `
+                    <button class="layer-button" onclick="setLayer('osm')">
+                        <img src="{% static 'image/osm.jpeg' %}" alt="OSM">
+                    </button>
+                    <button class="layer-button" onclick="setLayer('google')">
+                        <img src="{% static 'image/satellite.jpeg' %}" alt="Google">
+                    </button>
+                `;
+                L.DomEvent.on(button, 'click', function(e) {
+                    e.stopPropagation();
+                    container.classList.toggle('active');
+                });
+                map.on('click', function() {
+                    container.classList.remove('active');
+                });
+                return container;
+            }
+        });
+        map.addControl(new layerControl({ position: 'bottomleft' }));
+
+        function setLayer(layer) {
+            if (layer === 'osm') {
+                map.removeLayer(googleSatellite);
+                map.addLayer(openStreetMap);
+            } else {
+                map.removeLayer(openStreetMap);
+                map.addLayer(googleSatellite);
+            }
+        }
+
+        var marker = L.marker([y, x], {
+            icon: L.icon({
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+                iconSize: [20, 34],
+                iconAnchor: [10, 34]
+            })
+        }).addTo(map);
+
+        var circle = L.circle([y, x], {
+            radius: 35,
+            color: 'red',
+            fillColor: 'red',
+            fillOpacity: 0.3
+        }).addTo(map);
+
+        var locateControl = L.Control.extend({
+            onAdd: function(map) {
+                var container = L.DomUtil.create('div', 'leaflet-control-custom');
+                var button = L.DomUtil.create('button', '', container);
+                button.innerHTML = '<i class="ri-focus-3-fill"></i>';
+                L.DomEvent.on(button, 'click', function() {
+                    map.setView([y, x], staticZoom, { animate: true });
+                });
+                return container;
+            }
+        });
+        map.addControl(new locateControl({ position: 'topright' }));
+
+        // Fonction pour afficher/masquer le menu de partage avec animations
+        function toggleShareMenu() {
+            const shareMenu = document.getElementById('shareMenu');
+            const cards = shareMenu.querySelectorAll('.card');
+            
+            if (shareMenu.classList.contains('active')) {
+                // Fermeture avec animation inverse
+                cards.forEach((card, index) => {
+                    setTimeout(() => {
+                        card.classList.remove('active');
+                    }, index * 50);
+                });
+                setTimeout(() => {
+                    shareMenu.classList.remove('active');
+                }, cards.length * 50);
+            } else {
+                // Ouverture avec animation séquentielle
+                shareMenu.classList.add('active');
+                cards.forEach((card, index) => {
+                    setTimeout(() => {
+                        card.classList.add('active');
+                    }, index * 100);
+                });
+            }
+        }
+
+        // Gestion des clics sur les boutons de partage
+        document.querySelectorAll('.card').forEach(card => {
+            card.addEventListener('click', function(e) {
+                e.stopPropagation();
+                
+                // Animation de clic
+                this.style.transform = 'scale(0.85)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                }, 150);
+                
+                // Déterminer quelle action déclencher
+                if (this.classList.contains('whatsapp')) {
+                    shareOnWhatsApp();
+                } else if (this.classList.contains('instagram')) {
+                    shareOnInstagram();
+                } else if (this.classList.contains('facebook')) {
+                    shareOnFacebook();
+                } else if (this.classList.contains('email')) {
+                    shareViaEmail();
+                } else if (this.classList.contains('sms')) {
+                    shareViaSMS();
+                }
+            });
+        });
+
+        // Fonctions de partage
+        function shareOnInstagram() {
+            const shareText = `Voici ma position : ${nom_voies}, ${quartier}, ${entites_territoriales_2}`;
+            const shareUrl = `https://www.google.com/maps?q=${y},${x}`;
+            window.open(`https://www.instagram.com/?url=${encodeURIComponent(shareUrl)}`, '_blank');
+        }
+
+        function shareOnFacebook() {
+            const shareText = `Voici ma position : ${nom_voies}, ${quartier}, ${entites_territoriales_2}`;
+            const shareUrl = `https://www.google.com/maps?q=${y},${x}`;
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, '_blank');
+        }
+
+        function shareOnWhatsApp() {
+            const shareText = `Voici ma position : ${nom_voies}, ${quartier}, ${entites_territoriales_2}`;
+            const shareUrl = `https://www.google.com/maps?q=${y},${x}`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`, '_blank');
+        }
+
+        function shareViaEmail() {
+            const shareText = `Voici ma position : ${nom_voies}, ${quartier}, ${entites_territoriales_2}`;
+            const shareUrl = `https://www.google.com/maps?q=${y},${x}`;
+            window.open(`mailto:?subject=Ma position&body=${encodeURIComponent(shareText + ' ' + shareUrl)}`, '_blank');
+        }
+
+        function shareViaSMS() {
+            const shareText = `Voici ma position : ${nom_voies}, ${quartier}, ${entites_territoriales_2}`;
+            const shareUrl = `https://www.google.com/maps?q=${y},${x}`;
+            window.open(`sms:?body=${encodeURIComponent(shareText + ' ' + shareUrl)}`, '_blank');
+        }
+    </script>
+</body>
 </html>
