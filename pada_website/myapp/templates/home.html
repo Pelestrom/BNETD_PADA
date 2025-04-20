@@ -3,377 +3,521 @@
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
-    <link rel="stylesheet" href="{% static 'css/home.css' %}">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            background-color: #f8fafc;
-        }
-        nav {
-            position: fixed;
-            top: 0.2rem;
-            left: 0.5rem;
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 100%;
-            padding: 0 1rem;
-        }
-        nav img {
-            width: 100px;
-            height: auto;
-            transition: transform 0.3s ease;
-        }
-        nav img:hover {
-            transform: scale(1.1);
-        }
-        .share-btn {
-            position: fixed;
-            top: 1rem;
-            right: 1rem;
-            z-index: 1000;
-            display: flex;
-            cursor: pointer;
-            align-items: center;
-            justify-content: center;
-            background-color: #fff;
-            border: 1px solid rgba(128, 128, 128, 0.705);
-            border-radius: 50%;
-            transition: transform 0.3s ease-in-out, background-color 0.3s ease;
-            padding: 10px;
-            width: 50px;
-            height: 50px;
-            -webkit-tap-highlight-color: transparent;
-        }
-        .share-btn:hover {
-            background: #f1f1f1;
-            transform: scale(1.1);
-        }
-        .share-btn svg {
-            transition: transform 0.3s ease;
-        }
-        .share-btn:active svg {
-            transform: scale(0.9);
-        }
-        .share-menu {
-            position: fixed;
-            top: 70px;
-            right: 1rem;
-            display: none;
-            flex-direction: row;
-            align-items: center;
-            justify-content: center;
-            z-index: 999;
-            gap: 10px;
-        }
-        .share-menu.active {
-            display: flex;
-        }
-        .card {
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: white;
-            border-radius: 50%;
-            box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            cursor: pointer;
+    :root {
+        --primary-color: #0f172a;
+        --secondary-color: #1e293b;
+        --accent-color: #e21313;
+        --text-color: #0f172a;
+        --bg-color: #f8fafc;
+    }
+    
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        -webkit-tap-highlight-color: transparent;
+    }
+    
+    body {
+        font-family: 'Segoe UI', Arial, sans-serif;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        padding-top: 70px;
+        padding-bottom: 60px;
+    }
+    
+    /* Navbar fixe */
+    .navbar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 70px;
+        background-color: white;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+    }
+    
+    .navbar-logo {
+        height: 75px; /* Taille agrandie */
+        width: auto;
+        transition: transform 0.3s ease;
+    }
+    
+    .navbar-logo:active {
+        transform: scale(0.95);
+    }
+    
+    .share-btn {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        background-color: white;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+    
+    .share-btn:active {
+        transform: scale(0.95);
+        background-color: #f0f0f0;
+    }
+    
+    .share-btn svg {
+        width: 24px;
+        height: 24px;
+        color: var(--primary-color);
+    }
+    
+    /* Contenu principal */
+    .main-content {
+        flex: 1;
+        padding: 20px;
+        padding-top: 0;
+    }
+    
+    /* Carte */
+    #map {
+        width: 100%;
+        height: 300px;
+        border-radius: 15px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+    
+    /* Section description */
+    .description-section {
+        margin-bottom: 25px;
+    }
+    
+    .description-title {
+        background-color: var(--primary-color);
+        color: white;
+        padding: 12px 15px;
+        border-radius: 10px;
+        font-size: 1.1rem;
+        margin-bottom: 15px;
+        text-align: center;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    
+    .description-text {
+        font-size: 0.95rem;
+        line-height: 1.5;
+        color: var(--text-color);
+    }
+    
+    /* Section informations */
+    .info-section {
+        background-color: white;
+        border-radius: 15px;
+        padding: 15px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        margin-bottom: 20px;
+    }
+    
+    .info-group {
+        margin-bottom: 15px;
+    }
+    
+    .info-group:last-child {
+        margin-bottom: 0;
+    }
+    
+    .info-label {
+        font-size: 0.9rem;
+        font-weight: bold;
+        color: var(--accent-color);
+        margin-bottom: 5px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .info-label i {
+        margin-right: 8px;
+    }
+    
+    .info-value {
+        font-size: 1rem;
+        padding: 10px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .info-value i {
+        margin-right: 10px;
+        color: var(--primary-color);
+    }
+    
+    /* Menu de partage */
+    .share-menu {
+        position: fixed;
+        bottom: 80px;
+        right: 20px;
+        display: none;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        z-index: 1001;
+        gap: 10px;
+        background: white;
+        padding: 12px 15px;
+        border-radius: 25px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    }
+    
+    .share-menu.active {
+        display: flex;
+        animation: fadeInUp 0.3s ease-out;
+    }
+    
+    .share-card {
+        width: 45px;
+        height: 45px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: white;
+        border-radius: 50%;
+        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        cursor: pointer;
+        opacity: 0;
+        transform: translateY(20px) scale(0.8);
+        pointer-events: none;
+        position: relative;
+        overflow: hidden;
+        border: none;
+    }
+    
+    .share-menu.active .share-card {
+        pointer-events: auto;
+    }
+    
+    .share-card:nth-child(1) { transition-delay: 0.05s; }
+    .share-card:nth-child(2) { transition-delay: 0.1s; }
+    .share-card:nth-child(3) { transition-delay: 0.15s; }
+    .share-card:nth-child(4) { transition-delay: 0.2s; }
+    .share-card:nth-child(5) { transition-delay: 0.25s; }
+    
+    .share-card:active {
+        transform: scale(0.9) !important;
+    }
+    
+    .share-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(255,255,255,0.3);
+        transform: scale(0);
+        border-radius: 50%;
+        transition: transform 0.3s ease;
+    }
+    
+    .share-card:active::before {
+        transform: scale(2);
+        opacity: 0;
+    }
+    
+    .share-card img {
+        width: 24px;
+        height: 24px;
+        transition: transform 0.2s ease;
+        pointer-events: none;
+    }
+    
+    /* Overlay pour le menu de partage */
+    .share-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+    }
+    
+    .share-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+    
+    /* Contrôles de la carte */
+    .leaflet-control-custom {
+        background: white;
+        border-radius: 8px;
+        padding: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+    }
+    
+    .leaflet-control-custom i {
+        font-size: 1.2rem;
+        color: var(--primary-color);
+    }
+    
+    .layer-menu {
+        position: absolute;
+        bottom: 50px;
+        left: 0;
+        background: white;
+        border-radius: 12px;
+        padding: 8px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        display: none;
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .leaflet-control-custom.active .layer-menu {
+        display: flex;
+    }
+    
+    .layer-button {
+        width: 40px;
+        height: 40px;
+        border-radius: 8px;
+        overflow: hidden;
+        border: none;
+        background: none;
+        cursor: pointer;
+        padding: 0;
+    }
+    
+    .layer-button img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    
+    /* Footer */
+    .footer {
+        background-color: var(--primary-color);
+        color: white;
+        text-align: center;
+        padding: 10px;
+        font-size: 0.65rem;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 999;
+    }
+    
+    /* Animations */
+    @keyframes fadeInUp {
+        from {
             opacity: 0;
-            transform: translateY(20px) scale(0.8);
-            pointer-events: none;
-            position: relative;
-            overflow: hidden;
-            padding: 0;
-            border: none;
-            -webkit-tap-highlight-color: transparent;
+            transform: translateY(10px);
         }
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(255,255,255,0.3);
-            transform: scale(0);
-            border-radius: 50%;
-            transition: transform 0.3s ease;
-        }
-        .card:active::before {
-            transform: scale(2);
-            opacity: 0;
-        }
-        .card.active {
+        to {
             opacity: 1;
-            transform: translateY(0) scale(1);
-            pointer-events: auto;
+            transform: translateY(0);
         }
-        .card:hover {
-            transform: scale(1.1) translateY(0);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-        .card img {
-            width: 28px;
-            height: 28px;
-            transition: transform 0.2s ease;
-            pointer-events: none;
-            user-select: none;
-            -webkit-user-drag: none;
-        }
-        .card:active img {
-            transform: scale(0.9);
-        }
-        /* Zone cliquable étendue */
-        .card::after {
-            content: '';
-            position: absolute;
-            top: -10px;
-            left: -10px;
-            right: -10px;
-            bottom: -10px;
-        }
-        header {
-            padding: 1rem;
-            margin-top: 12rem;
-            flex: 1;
-        }
-        .header__content {
-            margin-bottom: 2rem;
-        }
-        .header__content h3 {
-            font-size: 1.5rem;
-            margin-bottom: 1rem;
-            color: white;
-            margin-top: 1.5rem;
-            background-color: #0f172a;
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            text-align: center;
-            transition: background-color 0.3s ease, transform 0.3s ease;
-        }
-        .header__content h3:hover {
-            background-color: #1e293b;
-            transform: translateY(-2px);
-        }
-        .header__content p {
-            font-size: 1rem;
-            margin-bottom: 1.5rem;
-            color: #0f172a;
-        }
-        .input__row {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-        .input__group {
-            display: flex;
-            flex-direction: column;
-        }
-        .input__group h5 {
-            font-size: 1.25rem;
-            margin-bottom: 0.5rem;
-            color: #0f172a;
-            font-weight: bold;
-        }
-        .input__group div {
-            display: flex;
-            align-items: center;
-            padding: 0.5rem;
-            border: none;
-            background: transparent;
-        }
-        .input__group div span {
-            margin-right: 0.75rem;
-        }
-        .input__group input {
-            border: none;
-            outline: none;
-            flex: 1;
-            font-size: 1.25rem;
-            background: transparent;
-            color: #0f172a;
-        }
-        footer {
-            background-color: transparent;
-            color: #0f172a;
-            text-align: center;
-            padding: 1rem;
-            font-size: 0.875rem;
-        }
+    }
+    
+    /* Adaptations pour tablettes */
+    @media (min-width: 768px) {
         #map {
-            height: 600px;
-            margin-top: 1rem;
-            border-radius: 1rem;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            transition: box-shadow 0.3s ease, transform 0.3s ease;
+            height: 400px;
         }
-        #map:hover {
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
-            transform: translateY(-2px);
+        
+        .navbar {
+            height: 80px;
+            padding: 0 30px;
         }
-        .leaflet-control-custom {
-            background: white;
-            border-radius: 5px;
-            padding: 5px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-            cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        
+        .navbar-logo {
+            height: 90px; /* Taille agrandie pour tablette */
+            width: auto;
         }
-        .leaflet-control-custom:hover {
-            transform: scale(1.1);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        
+        .share-btn {
+            width: 50px;
+            height: 50px;
         }
-        .leaflet-control-custom button {
-            border: none;
-            background: none;
-            cursor: pointer;
+        
+        .share-btn svg {
+            width: 26px;
+            height: 26px;
         }
-        .leaflet-control-custom button i {
-            font-size: 1.5rem;
-            color: #0f172a;
+        
+        .main-content {
+            padding: 30px;
+            padding-top: 0;
         }
-        .leaflet-control-custom .layer-menu {
-            display: none;
-            position: absolute;
-            left: 80%;
-            top: 0;
-            margin-left: 1px;
-            background: white;
-            padding: 0.1rem;
-            border-radius: 0.1rem;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-            flex-direction: row;
-            gap: 0.1rem;
+        
+        .description-title {
+            font-size: 1.3rem;
+            padding: 15px;
         }
-        .leaflet-control-custom.active .layer-menu {
-            display: flex;
+        
+        .description-text {
+            font-size: 1.05rem;
         }
-        .layer-button {
-            width: 40px;
-            height: 40px;
-            background: white;
-            border: none;
-            border-radius: 0.5rem;
-            padding: 0;
-            cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        
+        .info-label {
+            font-size: 1rem;
         }
-        .layer-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        
+        .info-value {
+            font-size: 1.1rem;
         }
-        .layer-button img {
-            width: 100%;
-            height: 100%;
-            border-radius: 0.5rem;
-            object-fit: cover;
+        
+        .share-card {
+            width: 50px;
+            height: 50px;
         }
-    </style>
+        
+        .share-card img {
+            width: 26px;
+            height: 26px;
+        }
+    }
+</style>
 </head>
 <body>
-    <nav>
-        <img src="{% static 'image/logo3.png' %}" alt="PADA">
+    <!-- Navbar fixe -->
+    <nav class="navbar">
+        <img src="{% static 'image/logo3.png' %}" alt="PADA" class="navbar-logo">
         <div class="share-btn" onclick="toggleShareMenu()">
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="50px" height="50px" fill="currentColor" class="w-6 h-6">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
                 <path fill-rule="evenodd" d="M15.75 4.5a3 3 0 11.825 2.066l-8.421 4.679a3.002 3.002 0 010 1.51l8.421 4.679a3 3 0 11-.729 1.31l-8.421-4.678a3 3 0 110-4.132l8.421-4.679a3 3 0 01-.096-.755z" clip-rule="evenodd" />
             </svg>
         </div>
     </nav>
 
+    <!-- Overlay pour le menu de partage -->
+    <div class="share-overlay" id="shareOverlay" onclick="closeShareMenu()"></div>
+
+    <!-- Menu de partage -->
     <div class="share-menu" id="shareMenu">
-        <button class="card whatsapp">
+        <button class="share-card whatsapp" onclick="shareOnWhatsApp()">
             <img src="{% static 'image/whatsapp.png' %}" alt="WhatsApp">
         </button>
-        <button class="card instagram">
+        <button class="share-card instagram" onclick="shareOnInstagram()">
             <img src="{% static 'image/instagram.png' %}" alt="Instagram">
         </button>
-        <button class="card facebook">
+        <button class="share-card facebook" onclick="shareOnFacebook()">
             <img src="{% static 'image/facebook.png' %}" alt="Facebook">
         </button>
-        <button class="card email">
+        <button class="share-card email" onclick="shareViaEmail()">
             <img src="{% static 'image/gmail.png' %}" alt="Email">
         </button>
-        <button class="card sms">
+        <button class="share-card sms" onclick="shareViaSMS()">
             <img src="{% static 'image/sms.png' %}" alt="SMS">
         </button>
     </div>
 
-    <header>
-        <div id="map" class="rounded-2xl shadow-3xl overflow-hidden"></div>
-        <div class="header__content">
-            <h3 class="text-xl font-bold mb-4 text-center text-white py-2 px-4 rounded-lg bg-blue-900">
-                Description de la rue
-            </h3>
-            <p>{{ description_voie }}</p>
+    <!-- Contenu principal -->
+    <div class="main-content">
+        <!-- Carte -->
+        <div id="map"></div>
+        
+        <!-- Description -->
+        <section class="description-section">
+            <h3 class="description-title">Description</h3>
+            <p class="description-text">{{ description_rue }}</p>
+        </section>
+        
+        <!-- Informations -->
+        <section class="info-section">
             <form action="{% url 'redirect_view' %}" method="post">
-                <div class="input__row">
-                    <div class="input__group">
-                        <h5>Commune</h5>
-                        <div>
-                            <span><i class="ri-building-fill"></i></span>
-                            <input type="text" placeholder="{{ entites_territoriales_2 }}" readonly />
-                        </div>
+                <div class="info-group">
+                    <div class="info-label">                        
+                        <span>Commune</span>
                     </div>
-                    <div class="input__group">
-                        <h5>Nom Rue</h5>
-                        <div>
-                            <span><i class="ri-road-map-fill"></i></span>
-                            <input type="text" placeholder="{{ nom_voies }}" readonly />
-                        </div>
+                    <div class="info-value">
+                        <i class="ri-building-fill"></i>
+                        <span>{{ commune_rue }}</span>
                     </div>
-                    <div class="input__group">
-                        <h5>Quartier</h5>
-                        <div>
-                            <span><i class="ri-community-fill"></i></span>
-                            <input type="text" placeholder="{{ quartier }}" readonly />
-                        </div>
+                </div>
+                
+                <div class="info-group">
+                    <div class="info-label">                       
+                        <span>Nom de la voie</span>
+                    </div>
+                    <div class="info-value">
+                        <i class="ri-road-map-fill"></i>
+                        <span>{{ nom_rue }}</span>
+                    </div>
+                </div>
+                
+                <div class="info-group">
+                    <div class="info-label">                        
+                        <span>Quartier</span>
+                    </div>
+                    <div class="info-value">
+                        <i class="ri-community-fill"></i>
+                        <span>{{ quartier_rue }}</span>
                     </div>
                 </div>
             </form>
-        </div>
-    </header>
+        </section>
+    </div>
 
-    <footer>
-        Copyright © 2025 PROJET D'ADRESSAGE DE LA VILLE D'ABIDJAN.
+    <!-- Footer -->
+    <footer class="footer">
+        Copyright © 2025 BNETD. Tous droits réservés.
     </footer>
 
     <script>
-        var x = parseFloat("{{ X|escapejs }}");
-        var y = parseFloat("{{ Y|escapejs }}");
+        // Initialisation de la carte
+        console.log("X: ", "{{ x|escapejs }}");
+        console.log("Y: ", "{{ y|escapejs }}");
+    
+        var x = parseFloat("{{ x|escapejs }}");
+        var y = parseFloat("{{ y|escapejs }}");
         var staticZoom = 18;
-
+    
+        if (isNaN(x) || isNaN(y)) {
+            console.error("Les coordonnées sont invalides :", x, y);
+            x = 5.316667;
+            y = -4.033333;
+        }
+    
         var map = L.map('map').setView([y, x], staticZoom);
-
-        var openStreetMap = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            maxZoom: 19,
-            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    
+        var osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            maxZoom: 19
         }).addTo(map);
-
+    
         var googleSatellite = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
             maxZoom: 19,
             subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
             attribution: '&copy; <a href="https://www.google.com/intl/en/permissions/geoguidelines/">Google Maps</a>'
         });
-
+    
+        // Contrôle des couches
         var layerControl = L.Control.extend({
             onAdd: function(map) {
                 var container = L.DomUtil.create('div', 'leaflet-control-custom');
@@ -399,17 +543,18 @@
             }
         });
         map.addControl(new layerControl({ position: 'bottomleft' }));
-
+    
         function setLayer(layer) {
             if (layer === 'osm') {
                 map.removeLayer(googleSatellite);
-                map.addLayer(openStreetMap);
+                map.addLayer(osmLayer);
             } else {
-                map.removeLayer(openStreetMap);
+                map.removeLayer(osmLayer);
                 map.addLayer(googleSatellite);
             }
         }
-
+    
+        // Marqueur et cercle
         var marker = L.marker([y, x], {
             icon: L.icon({
                 iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
@@ -417,14 +562,15 @@
                 iconAnchor: [10, 34]
             })
         }).addTo(map);
-
+    
         var circle = L.circle([y, x], {
             radius: 35,
             color: 'red',
             fillColor: 'red',
             fillOpacity: 0.3
         }).addTo(map);
-
+    
+        // Contrôle de localisation
         var locateControl = L.Control.extend({
             onAdd: function(map) {
                 var container = L.DomUtil.create('div', 'leaflet-control-custom');
@@ -437,89 +583,108 @@
             }
         });
         map.addControl(new locateControl({ position: 'topright' }));
-
-        // Fonction pour afficher/masquer le menu de partage avec animations
+    
+        // Fonctions de partage avec lien Google Maps
+        function generateGoogleMapsUrl() {
+            return `https://www.google.com/maps?q=${y},${x}`;
+        }
+    
+        function shareOnWhatsApp() {
+            const googleMapsUrl = generateGoogleMapsUrl();
+            const shareText = `📍 Voici ma position sur Google Maps : ${googleMapsUrl}`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(shareText)}`, '_blank');
+        }
+    
+        function shareOnInstagram() {
+            const googleMapsUrl = generateGoogleMapsUrl();
+            copyToClipboard(googleMapsUrl);
+            alert("Lien Google Maps copié dans le presse-papiers ! Collez-le dans Instagram.");
+        }
+    
+        function shareOnFacebook() {
+            const googleMapsUrl = generateGoogleMapsUrl();
+            const shareText = `📍 Voici ma position sur Google Maps`;
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(googleMapsUrl)}&quote=${encodeURIComponent(shareText)}`, '_blank');
+        }
+    
+        function shareViaEmail() {
+            const googleMapsUrl = generateGoogleMapsUrl();
+            const shareText = `📍 Voici ma position sur Google Maps : ${googleMapsUrl}`;
+            window.location.href = `mailto:?subject=Ma position&body=${encodeURIComponent(shareText)}`;
+        }
+    
+        function shareViaSMS() {
+            const googleMapsUrl = generateGoogleMapsUrl();
+            const shareText = `📍 Voici ma position sur Google Maps : ${googleMapsUrl}`;
+            window.location.href = `sms:?body=${encodeURIComponent(shareText)}`;
+        }
+    
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text).then(() => {
+                console.log('Copied to clipboard');
+            }).catch(err => {
+                console.error('Could not copy text: ', err);
+            });
+        }
+    
+        // Gestion du menu de partage avec animation
         function toggleShareMenu() {
             const shareMenu = document.getElementById('shareMenu');
-            const cards = shareMenu.querySelectorAll('.card');
+            const shareOverlay = document.getElementById('shareOverlay');
+            const shareCards = document.querySelectorAll('.share-card');
             
             if (shareMenu.classList.contains('active')) {
-                // Fermeture avec animation inverse
-                cards.forEach((card, index) => {
-                    setTimeout(() => {
-                        card.classList.remove('active');
-                    }, index * 50);
-                });
-                setTimeout(() => {
-                    shareMenu.classList.remove('active');
-                }, cards.length * 50);
+                closeShareMenu();
             } else {
-                // Ouverture avec animation séquentielle
-                shareMenu.classList.add('active');
-                cards.forEach((card, index) => {
-                    setTimeout(() => {
-                        card.classList.add('active');
-                    }, index * 100);
-                });
+                openShareMenu();
             }
         }
-
-        // Gestion des clics sur les boutons de partage
-        document.querySelectorAll('.card').forEach(card => {
-            card.addEventListener('click', function(e) {
-                e.stopPropagation();
-                
-                // Animation de clic
-                this.style.transform = 'scale(0.85)';
+    
+        function openShareMenu() {
+            const shareMenu = document.getElementById('shareMenu');
+            const shareOverlay = document.getElementById('shareOverlay');
+            const shareCards = document.querySelectorAll('.share-card');
+            
+            shareMenu.classList.add('active');
+            shareOverlay.classList.add('active');
+            
+            // Animation d'apparition successive
+            shareCards.forEach((card, index) => {
                 setTimeout(() => {
-                    this.style.transform = 'scale(1)';
-                }, 150);
-                
-                // Déterminer quelle action déclencher
-                if (this.classList.contains('whatsapp')) {
-                    shareOnWhatsApp();
-                } else if (this.classList.contains('instagram')) {
-                    shareOnInstagram();
-                } else if (this.classList.contains('facebook')) {
-                    shareOnFacebook();
-                } else if (this.classList.contains('email')) {
-                    shareViaEmail();
-                } else if (this.classList.contains('sms')) {
-                    shareViaSMS();
-                }
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0) scale(1)';
+                }, index * 100);
             });
+        }
+    
+        function closeShareMenu() {
+            const shareMenu = document.getElementById('shareMenu');
+            const shareOverlay = document.getElementById('shareOverlay');
+            const shareCards = document.querySelectorAll('.share-card');
+            
+            // Animation de disparition inverse
+            shareCards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px) scale(0.8)';
+                }, index * 50);
+            });
+            
+            setTimeout(() => {
+                shareMenu.classList.remove('active');
+                shareOverlay.classList.remove('active');
+            }, shareCards.length * 50);
+        }
+    
+        // Fermer le menu de partage quand on clique en dehors
+        document.addEventListener('click', function(e) {
+            const shareMenu = document.getElementById('shareMenu');
+            const shareBtn = document.querySelector('.share-btn');
+            
+            if (!shareMenu.contains(e.target) && !shareBtn.contains(e.target)) {
+                closeShareMenu();
+            }
         });
-
-        // Fonctions de partage
-        function shareOnInstagram() {
-            const shareText = `Voici ma position : ${nom_voies}, ${quartier}, ${entites_territoriales_2}`;
-            const shareUrl = `https://www.google.com/maps?q=${y},${x}`;
-            window.open(`https://www.instagram.com/?url=${encodeURIComponent(shareUrl)}`, '_blank');
-        }
-
-        function shareOnFacebook() {
-            const shareText = `Voici ma position : ${nom_voies}, ${quartier}, ${entites_territoriales_2}`;
-            const shareUrl = `https://www.google.com/maps?q=${y},${x}`;
-            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, '_blank');
-        }
-
-        function shareOnWhatsApp() {
-            const shareText = `Voici ma position : ${nom_voies}, ${quartier}, ${entites_territoriales_2}`;
-            const shareUrl = `https://www.google.com/maps?q=${y},${x}`;
-            window.open(`https://wa.me/?text=${encodeURIComponent(shareText + ' ' + shareUrl)}`, '_blank');
-        }
-
-        function shareViaEmail() {
-            const shareText = `Voici ma position : ${nom_voies}, ${quartier}, ${entites_territoriales_2}`;
-            const shareUrl = `https://www.google.com/maps?q=${y},${x}`;
-            window.open(`mailto:?subject=Ma position&body=${encodeURIComponent(shareText + ' ' + shareUrl)}`, '_blank');
-        }
-
-        function shareViaSMS() {
-            const shareText = `Voici ma position : ${nom_voies}, ${quartier}, ${entites_territoriales_2}`;
-            const shareUrl = `https://www.google.com/maps?q=${y},${x}`;
-            window.open(`sms:?body=${encodeURIComponent(shareText + ' ' + shareUrl)}`, '_blank');
-        }
     </script>
 </body>
 </html>
