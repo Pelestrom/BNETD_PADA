@@ -163,6 +163,13 @@
         align-items: center;
     }
     
+    .info-value span {
+        text-align: justify;
+        text-justify: inter-word;
+        letter-spacing: normal;
+        word-spacing: normal;
+      }
+      
     .info-value i {
         margin-right: 10px;
         color: var(--primary-color);
@@ -444,13 +451,41 @@
         
         <!-- Description -->
         <section class="description-section">
-            <h3 class="description-title">Description</h3>
-            <p class="description-text">{{ description_rue }}</p>
+            <h3 class="description-title">INFORMATIONS SUR LE PANNEAU</h3>      
         </section>
         
         <!-- Informations -->
         <section class="info-section">
             <form action="{% url 'redirect_view' %}" method="post">
+                <div class="info-group">
+                    <div class="info-label">                       
+                        <span>Nom de la voie</span>
+                    </div>
+                    <div class="info-value">
+                        <i class="ri-direction-fill"></i>
+                        <span>{{ nom_rue }}</span>
+                    </div>
+                </div>
+                <div class="info-group">
+                    <div class="info-label">                        
+                        <span>Description</span>
+                    </div>
+                    <div class="info-value">
+                        <i class="ri-information-fill"></i>
+                        <span>{{ description_rue }}</span>
+                    </div>
+                </div>
+
+                <div class="info-group">
+                    <div class="info-label">                        
+                        <span>Quartier</span>
+                    </div>
+                    <div class="info-value">
+                        <i class="ri-community-fill"></i>
+                        <span>{{ quartier_rue }}</span>
+                    </div>
+                </div>
+
                 <div class="info-group">
                     <div class="info-label">                        
                         <span>Commune</span>
@@ -461,25 +496,7 @@
                     </div>
                 </div>
                 
-                <div class="info-group">
-                    <div class="info-label">                       
-                        <span>Nom de la voie</span>
-                    </div>
-                    <div class="info-value">
-                        <i class="ri-road-map-fill"></i>
-                        <span>{{ nom_rue }}</span>
-                    </div>
-                </div>
-                
-                <div class="info-group">
-                    <div class="info-label">                        
-                        <span>Quartier</span>
-                    </div>
-                    <div class="info-value">
-                        <i class="ri-community-fill"></i>
-                        <span>{{ quartier_rue }}</span>
-                    </div>
-                </div>
+               
             </form>
         </section>
     </div>
