@@ -1,7 +1,7 @@
 import qrcode  # type: ignore
 
 # URL avec niveau de zoom
-url = f"http://192.168.209.42:8000/00216P4312/"
+url = f"http://192.168.1.140:8000/00217P9262/"
 
 # Création de l'objet QRCode
 qr = qrcode.QRCode(
@@ -19,4 +19,4 @@ qr.make(fit=True)
 img = qr.make_image(fill_color="MidnightBlue", back_color="white")
 
 # Enregistrement de l'image du code QR dans un fichier
-img.save("test1.png")
+img.save("test_BONOUA.png")

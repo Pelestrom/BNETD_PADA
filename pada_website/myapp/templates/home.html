@@ -408,6 +408,44 @@
             width: 26px;
             height: 26px;
         }
+    }    /* Style pour le groupe nom de voie */
+    .info-group.street-name {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .info-label.street {
+        margin-bottom: 0;
+    }
+
+    /* Style pour la typologie */
+    .typology-display {
+        display: inline-flex;
+        align-items: center;
+        font-size: 0.8rem;
+        color: #4a5568; /* Gris foncé */
+        background-color: #f7fafc;
+        padding: 4px 10px;
+        border-radius: 12px;
+        border: 1px solid #e2e8f0;
+        margin-left: 10px;
+    }
+
+    .typology-display i {
+        margin-right: 5px;
+        font-size: 0.9rem;
+        color: #1a202c; /* Noir */
+    }
+
+    /* Adaptation pour très petits écrans */
+    @media (max-width: 400px) {
+        .typology-display {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            margin-left: 5px;
+        }
     }
 </style>
 </head>
@@ -454,18 +492,25 @@
             <h3 class="description-title">INFORMATIONS SUR LE PANNEAU</h3>      
         </section>
         
-        <!-- Informations -->
-        <section class="info-section">
-            <form action="{% url 'redirect_view' %}" method="post">
-                <div class="info-group">
-                    <div class="info-label">                       
-                        <span>Nom de la voie</span>
-                    </div>
-                    <div class="info-value">
-                        <i class="ri-direction-fill"></i>
-                        <span>{{ nom_rue }}</span>
-                    </div>
-                </div>
+ <!-- Informations -->
+ <section class="info-section">
+    <form action="{% url 'redirect_view' %}" method="post">
+        <div class="info-group street-name">
+            <div class="info-label street">                       
+                <span>Nom de la voie</span>
+            </div>
+            {% if typologie %}
+            <div class="typology-display">
+                <i class="{{ typologie_icon }}"></i>
+                <span>{{ typologie|capfirst }}</span>
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="info-value">
+            <i class="ri-direction-fill"></i>
+            <span>{{ nom_rue }}</span>
+        </div>
                 <div class="info-group">
                     <div class="info-label">                        
                         <span>Description</span>
@@ -475,7 +520,7 @@
                         <span>{{ description_rue }}</span>
                     </div>
                 </div>
-
+    
                 <div class="info-group">
                     <div class="info-label">                        
                         <span>Quartier</span>
@@ -485,7 +530,7 @@
                         <span>{{ quartier_rue }}</span>
                     </div>
                 </div>
-
+    
                 <div class="info-group">
                     <div class="info-label">                        
                         <span>Commune</span>
@@ -495,10 +540,9 @@
                         <span>{{ commune_rue }}</span>
                     </div>
                 </div>
-                
-               
             </form>
         </section>
+    
     </div>
 
     <!-- Footer -->
