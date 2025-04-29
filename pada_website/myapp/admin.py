@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .models import Voie
+from .models import Suggestion
 
 @admin.register(Voie)
 class VoieAdmin(admin.ModelAdmin):
@@ -21,3 +22,13 @@ class VoieAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
     )
+    
+@admin.register(Suggestion)
+class SuggestionAdmin(admin.ModelAdmin):
+    list_display = ('nom_voie', 'date_creation', 'short_suggestion')
+    list_filter = ('date_creation',)
+    search_fields = ('nom_voie', 'suggestion')
+    
+    def short_suggestion(self, obj):
+        return obj.suggestion[:50] + '...' if len(obj.suggestion) > 50 else obj.suggestion
+    short_suggestion.short_description = 'Suggestion'

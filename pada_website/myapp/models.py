@@ -17,3 +17,28 @@ class Voie(models.Model):
 
     def __str__(self):
         return f"{self.nom_voies} - {self.quartier}"
+ 
+    
+    
+class Suggestion(models.Model):
+    voie = models.ForeignKey(
+        Voie,
+        on_delete=models.CASCADE,
+        related_name='suggestions',
+        db_column='voie_id'
+    )
+    nom_voie = models.CharField(max_length=255)
+    qr_code_url = models.TextField()
+    suggestion = models.TextField()
+    date_creation = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'suggestions'
+        managed = False
+
+    def save(self, *args, **kwargs):
+        if not self.pk:  # Seulement lors du premier enregistrement
+            if self.voie:
+                self.nom_voie = self.voie.nom_voies
+                self.qr_code_url = self.voie.qr_code
+        super().save(*args, **kwargs)
