@@ -56,25 +56,13 @@
         height: 50px;
         width: auto;
         transition: transform 0.3s ease;
+       
     }
-
+   
     .navbar-logo:active {
         transform: scale(0.95);
     }
-    .video-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        flex: 1; /* Permet à la vidéo de prendre l'espace disponible */
-    }
-
-    .video-container video {
-        width: 200px; /* Réduit la taille de la vidéo */
-        height: 40px;
-        border-radius: 8px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    }
-
+     
     /* Contenu principal */
     .main-content {
         flex: 1;
@@ -97,17 +85,7 @@
         margin-bottom: 25px;
     }
 
-    .description-title {
-        background-color: #0F8342; /* Changé en vert */
-        color: white; /* Texte en blanc */
-        padding: 12px 15px;
-        border-radius: 10px;
-        font-size: 1.1rem;
-        margin-bottom: 15px;
-        text-align: center;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
-
+ 
     .description-text {
         font-size: 0.95rem;
         line-height: 1.5;
@@ -597,19 +575,35 @@
       margin-top: 4px;
       display: none;
     }
+
+
+    /* Style pour la photo de personnalité */
+.personnalite-photo {
+    width: 80px;
+    height: 80px;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 2px solid #0F8342;
+    margin-right: 15px;
+    float: left;
+}
+
+.description-with-photo {
+    display: flex;
+    align-items: flex-start;
+}
+
+.description-content {
+    flex: 1;
+}
 </style>
 </head>
 <body>
     <!-- Navbar fixe -->
     <nav class="navbar">
-        <img src="{% static 'image/LOGO.png' %}" alt="PADA" class="navbar-logo">
-        <div class="video-container">
-            <video controls>
-                <source src="{% static 'video/ok.mp4' %}" type="video/mp4">
-                Votre navigateur ne supporte pas la lecture de vidéos.
-            </video>
-        </div>
+        <img src="{% static 'image/logo_qrcode.png' %}" alt="PADA" class="navbar-logo">
     </nav>
+    
 
     <!-- Overlay pour le menu de partage -->
     <div class="share-overlay" id="shareOverlay" onclick="closeShareMenu()"></div>
@@ -645,10 +639,7 @@
         </div>
 
         <!-- Description -->
-        <section class="description-section">
-            <h3 class="description-title">INFORMATIONS SUR LE PANNEAU</h3>
-        </section>
-
+       
         <!-- Informations -->
         <section class="info-section">
             <form action="{% url 'redirect_view' %}" method="post">
@@ -674,10 +665,17 @@
                     </div>
                     <div class="info-value">
                         <i class="ri-information-fill"></i>
-                        <div class="description-scroll" id="desc">
-                          <span id="desc-text">{{ description_rue }}</span>
+                        <div class="{% if has_personnalite_photo %}description-with-photo{% endif %}">
+                            {% if has_personnalite_photo and photo_personnalite %}
+                            <img src="{{ photo_personnalite }}" alt="Photo de la personnalité" class="personnalite-photo">
+                            {% endif %}
+                            <div class="description-content">
+                                <div class="description-scroll" id="desc">
+                                    <span id="desc-text">{{ description_rue }}</span>
+                                </div>
+                                <div class="see-more" id="see-more" onclick="toggleDescription()">Voir plus</div>
+                            </div>
                         </div>
-                        <div class="see-more" id="see-more" onclick="toggleDescription()">Voir plus</div>
                     </div>
                 </div>
 

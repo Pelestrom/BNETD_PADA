@@ -3,7 +3,8 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from .models import Voie
 from .forms import SuggestionForm
-
+from django.contrib.auth.decorators import login_required
+ 
 def home_view(request, qr_code):
     qr_code = qr_code.replace('https://panneautage.bnetd.ci/', '')
     full_qr_code = f"https://panneautage.bnetd.ci/{qr_code}"
@@ -17,15 +18,15 @@ def home_view(request, qr_code):
         'x': voie.X,
         'y': voie.Y,
         'qr_code': qr_code,
-        # 'typologie': voie.typologie,
-        # 'typologie_icon': typologie_icons.get(voie.typologie.lower(), 'ri-information-line')
+        'photo_personnalite': voie.photo_personnalite.url if voie.has_personnalite_photo else None,
+        'has_personnalite_photo': voie.has_personnalite_photo,
     })
     
 def redirect_view(request):
     # Logique de la vue de redirection
     return redirect('map')
 
-
+ 
 @require_POST
 def submit_suggestion(request, qr_code):
     # Nettoyez le qr_code comme dans home_view
@@ -55,3 +56,4 @@ def submit_suggestion(request, qr_code):
     
     # Si le formulaire est invalide, retourner les erreurs sous forme JSON
     return JsonResponse({'status': 'error', 'errors': form.errors}, status=400)
+

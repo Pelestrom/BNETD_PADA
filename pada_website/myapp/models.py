@@ -1,4 +1,6 @@
 from django.db import models
+ 
+from django.db import models
 
 class Voie(models.Model):
     id = models.AutoField(primary_key=True)
@@ -9,7 +11,7 @@ class Voie(models.Model):
     qr_code = models.TextField()
     description = models.CharField(max_length=255)
     entites_territoriales_2 = models.TextField()
-    typologie = models.TextField()  # Nouvelle colonne ajoutée
+    photo_personnalite = models.CharField(max_length=255, null=True, blank=True)
 
     class Meta:
         db_table = 'panneautage'
@@ -17,7 +19,11 @@ class Voie(models.Model):
 
     def __str__(self):
         return f"{self.nom_voies} - {self.quartier}"
- 
+    
+    @property
+    def has_personnalite_photo(self):
+        """Retourne True si une photo de personnalité existe"""
+        return bool(self.photo_personnalite)
     
     
 class Suggestion(models.Model):

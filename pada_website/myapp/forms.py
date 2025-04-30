@@ -1,5 +1,6 @@
 from django import forms
 from .models import Suggestion
+from django.contrib.auth.forms import AuthenticationForm
 
 class SuggestionForm(forms.ModelForm):
     class Meta:
@@ -12,3 +13,9 @@ class SuggestionForm(forms.ModelForm):
                 'rows': 4
             })
         }
+   
+   
+# class LoginForm(AuthenticationForm):
+#     username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control'}))
+#     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control'}))     
+
