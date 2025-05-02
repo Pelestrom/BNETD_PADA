@@ -1,5 +1,7 @@
 from django.db import models
- 
+from django.db import models
+from django.conf import settings
+import os
 from django.db import models
 
 class Voie(models.Model):
@@ -8,7 +10,7 @@ class Voie(models.Model):
     quartier = models.CharField(max_length=255)
     X = models.CharField(max_length=255)
     Y = models.CharField(max_length=255)
-    qr_code = models.TextField()
+    qr_code = models.TextField(unique=True)
     description = models.CharField(max_length=255)
     entites_territoriales_2 = models.TextField()
     photo_personnalite = models.CharField(max_length=255, null=True, blank=True)
@@ -22,10 +24,35 @@ class Voie(models.Model):
     
     @property
     def has_personnalite_photo(self):
-        """Retourne True si une photo de personnalité existe"""
+        """Vérifie si une photo est associée"""
         return bool(self.photo_personnalite)
     
+ 
+
+    def get_absolute_photo_url(self):
+        """
+        Génère l'URL complète de la photo selon le format souhaité :
+        /code_panneau/media/chemin_photo
+        """
+        if not self.photo_personnalite:
+            return None
+            
+        # Si c'est déjà une URL complète
+        if self.photo_personnalite.startswith(('http://', 'https://')):
+            return self.photo_personnalite
+            
+        # Nettoyage du code QR pour l'URL
+        qr_code = self.qr_code.replace('https://panneautage.bnetd.ci/', '').strip('/')
+        
+        # Construction de l'URL selon votre format demandé
+        return f"/{qr_code}/media/{self.photo_personnalite.lstrip('/')}"
     
+    @property
+    def has_personnalite_photo(self):
+        """Vérifie si une photo existe"""
+        return bool(self.photo_personnalite)
+ 
+   
 class Suggestion(models.Model):
     voie = models.ForeignKey(
         Voie,

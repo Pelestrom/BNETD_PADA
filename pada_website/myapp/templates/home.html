@@ -13,7 +13,8 @@
     :root {
         --primary-color: #0f172a;
         --secondary-color: #1e293b;
-        --accent-color: #F08F30; /* Changé de rouge à orange */
+        --accent-color: #FF0000;
+        --footer-color: #02091EFF;
         --text-color: #0f172a;
         --bg-color: #f8fafc;
     }
@@ -33,7 +34,7 @@
         display: flex;
         flex-direction: column;
         padding-top: 70px;
-        padding-bottom: 50px; /* Réduit la hauteur du footer */
+        padding-bottom: 30px;
     }
 
     /* Navbar fixe */
@@ -53,10 +54,19 @@
     }
 
     .navbar-logo {
-        height: 50px;
+        height: 55px;
         width: auto;
         transition: transform 0.3s ease;
-       
+    }
+    
+    .navbar-title {
+        font-size: 1rem;
+        font-weight: bold;
+        color: var(--footer-color);
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: nowrap;
     }
    
     .navbar-logo:active {
@@ -80,18 +90,6 @@
         border: 1px solid rgba(0, 0, 0, 0.1);
     }
 
-    /* Section description */
-    .description-section {
-        margin-bottom: 25px;
-    }
-
- 
-    .description-text {
-        font-size: 0.95rem;
-        line-height: 1.5;
-        color: var(--text-color);
-    }
-
     /* Section informations */
     .info-section {
         background-color: white;
@@ -101,26 +99,23 @@
         margin-bottom: 20px;
     }
 
-    .info-group {
+    .info-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
         margin-bottom: 15px;
     }
 
-    .info-group:last-child {
-        margin-bottom: 0;
+    .info-group {
+        flex: 1;
+        min-width: 120px;
     }
 
     .info-label {
         font-size: 0.9rem;
         font-weight: bold;
-        color: var(--accent-color); /* Utilise la couleur orange */
+        color: var(--accent-color);
         margin-bottom: 5px;
-        display: flex;
-        align-items: center;
-    }
-
-    .info-label i {
-        margin-right: 8px;
-        color: var(--accent-color); /* Icônes en orange */
     }
 
     .info-value {
@@ -132,16 +127,16 @@
         align-items: center;
     }
 
+    .info-value i {
+        margin-right: 10px;
+        color: black; /* Icônes en noir */
+    }
+
     .info-value span {
         text-align: justify;
         text-justify: inter-word;
         letter-spacing: normal;
         word-spacing: normal;
-    }
-
-    .info-value i {
-        margin-right: 10px;
-        color: #0F8342; /* Icônes en vert */
     }
 
     /* Menu de partage */
@@ -167,8 +162,8 @@
     }
 
     .share-card {
-        width: 36px; /* Réduit la taille des boutons */
-        height: 36px; /* Réduit la taille des boutons */
+        width: 36px;
+        height: 36px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -246,19 +241,22 @@
     /* Contrôles de la carte */
     .leaflet-control-zoom {
         background: white;
-        border-radius: px;
-        padding: 0.1px; /* Réduit la taille des boutons de zoom */
+        border-radius: 4px;
+        padding: 2px;
         box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
     }
 
     .leaflet-control-zoom a {
-        color: #0F8342; /* Icône en vert */
+        color: var(--footer-color);
+        width: 24px;
+        height: 24px;
+        line-height: 24px;
     }
 
     .leaflet-control-custom {
         background: white;
         border-radius: 4px;
-        padding: 2px; /* Réduit la taille des boutons */
+        padding: 5px;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         display: flex;
         align-items: center;
@@ -267,8 +265,8 @@
     }
 
     .leaflet-control-custom i {
-        font-size: 1rem; /* Réduit la taille des icônes */
-        color: #0F8342; /* Icône en vert */
+        font-size: 1rem;
+        color: var(--footer-color);
     }
 
     .layer-menu {
@@ -289,8 +287,8 @@
     }
 
     .layer-button {
-        width: 36px; /* Réduit la taille des boutons */
-        height: 36px; /* Réduit la taille des boutons */
+        width: 36px;
+        height: 36px;
         border-radius: 8px;
         overflow: hidden;
         border: none;
@@ -307,16 +305,28 @@
 
     /* Footer */
     .footer {
-        background-color: #0F8342; /* Changé en vert */
+        background-color: var(--footer-color);
         color: white;
         text-align: center;
-        padding: 5px 10px; /* Réduit la hauteur du footer */
+        padding: 5px 10px;
         font-size: 0.65rem;
         position: fixed;
         bottom: 0;
         left: 0;
         right: 0;
         z-index: 999;
+        height: 45px;
+    }
+
+    .footer-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .footer-copyright {
+        margin-top: 5px;
+        color: #f8f9fa;
     }
 
     /* Animations */
@@ -331,106 +341,106 @@
         }
     }
 
-    /* Style pour le groupe nom de voie */
-    .info-group.street-name {
+    /* Style pour la description avec photo */
+    .description-with-photo {
         display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
+        gap: 15px;
+        align-items: flex-start;
     }
 
-    .info-label.street {
-        margin-bottom: 0;
+    .photo-personnalite-container {
+        width: 80px;
+        height: 80px;
+        border-radius: 8px;
+        overflow: hidden;
+        border: 1px solid var(--footer-color);
+        flex-shrink: 0;
     }
 
-    /* Style pour la typologie */
-    .typology-display {
-        display: inline-flex;
-        align-items: center;
-        font-size: 0.8rem;
-        color: #4a5568;
-        background-color: #f7fafc;
-        padding: 4px 10px;
-        border-radius: 12px;
-        border: 1px solid #e2e8f0;
-        margin-left: 10px;
+    .photo-personnalite {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center top;
     }
 
-    .typology-display i {
-        margin-right: 5px;
-        font-size: 0.9rem;
-        color: #0F8342; /* Changé en vert */
-    }
-
-    /* Adaptation pour très petits écrans */
-    @media (max-width: 400px) {
-        .typology-display {
-            font-size: 0.75rem;
-            padding: 3px 8px;
-            margin-left: 5px;
-        }
+    .description-content {
+        flex: 1;
     }
 
     /* Styles pour la section suggestion */
     .suggestion-section {
-        background-color: white;
+        background-color: transparent;
         border-radius: 15px;
-        padding: 20px;
-        margin-bottom: 60px; /* Ajoute de l'espace en bas */
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        width: 90%; /* Largeur réduite */
-        margin-left: auto;
-        margin-right: auto;
+        padding: 0;
+        margin-bottom: 20px;
+        margin-top: 10px;
     }
 
     .suggestion-title {
-        font-size: 1rem;
+        font-size: 0.9rem;
         font-weight: bold;
-        color: var(--accent-color); /* Orange */
-        margin-bottom: 15px;
-        display: flex;
-        align-items: center;
+        color: var(--accent-color);
+        margin-bottom: 10px;
     }
 
     .suggestion-title i {
         margin-right: 8px;
-        font-size: 1.2rem;
+        color: black; /* Icône en noir */
     }
 
     .suggestion-form {
         display: flex;
         flex-direction: column;
+        gap: 10px;
+    }
+
+    .suggestion-input-container {
+        position: relative;
     }
 
     .suggestion-input {
         width: 100%;
-        padding: 12px;
+        padding: 10px;
         border: 1px solid #e2e8f0;
         border-radius: 8px;
-        resize: vertical;
-        min-height: 100px;
-        margin-bottom: 12px;
+        resize: none;
+        min-height: 80px;
         font-family: inherit;
         font-size: 0.95rem;
+        transition: all 0.3s ease;
+    }
+
+    .suggestion-input:focus {
+        outline: none;
+        border-color: var(--accent-color);
+        box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.1);
+        min-height: 100px;
     }
 
     .suggestion-submit {
-        background-color: var(--accent-color); /* Orange */
+        background-color: var(--accent-color);
         color: white;
         border: none;
-        padding: 12px;
+        padding: 10px 15px;
         border-radius: 8px;
         font-weight: bold;
         cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        gap: 8px;
-        transition: background-color 0.3s;
+        gap: 5px;
+        transition: all 0.3s;
+        height: 40px;
+        margin-left: auto;
+        position: absolute;
+        right: 0;
+        bottom: -50px;
     }
 
-    .suggestion-submit:hover {
-        background-color: #e07d20; /* Orange plus foncé */
+    .suggestion-input:focus + .suggestion-row .suggestion-submit {
+        bottom: 10px;
+        right: 10px;
     }
 
     .feedback-message {
@@ -452,9 +462,14 @@
 
     /* Style pour la description avec scroll */
     .description-scroll {
-        max-height: 120px;
-        overflow-y: auto;
-        padding-right: 8px;
+        max-height: 4.5em;
+        overflow: hidden;
+        position: relative;
+        transition: max-height 0.3s ease;
+    }
+
+    .description-scroll.expanded {
+        max-height: none;
     }
 
     .description-scroll::-webkit-scrollbar {
@@ -462,7 +477,7 @@
     }
 
     .description-scroll::-webkit-scrollbar-thumb {
-        background-color: var(--accent-color); /* Orange */
+        background-color: var(--accent-color);
         border-radius: 2px;
     }
 
@@ -471,26 +486,26 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: 20px;
-        margin-top: 5px;
-    }
-
-    .footer-partners img.partner1 {
-        height: 50px; /* Taille par défaut */
-    }
-
-    .footer-partners img.partner2 {
-        height: 25px; /* Exemple de taille différente */
-    }
-
-    .footer-partners img.partner3 {
-        height: 40px; /* Exemple de taille différente */
+        gap: 10px;
     }
 
     .footer-partners img {
+        height: 30px;
         width: auto;
         opacity: 0.8;
         transition: opacity 0.3s;
+    }
+
+    .footer-partners img.partner1 {
+        height: 35px;
+    }
+    
+    .footer-partners img.partner2 {
+        height: 25px;
+    }
+    
+    .footer-partners img.partner3 {
+        height: 30px;
     }
 
     .footer-partners img:hover {
@@ -500,11 +515,11 @@
     /* Style pour le bouton de partage sur la carte */
     .map-share-btn {
         position: absolute;
-        bottom: 10px; /* Position en bas */
-        right: 10px; /* Position à droite */
+        bottom: 10px;
+        right: 10px;
         z-index: 1000;
-        width: 36px; /* Largeur réduite */
-        height: 36px; /* Hauteur réduite */
+        width: 36px;
+        height: 36px;
         border-radius: 50%;
         background-color: white;
         border: 1px solid rgba(0, 0, 0, 0.1);
@@ -524,86 +539,72 @@
     .map-share-btn svg {
         width: 18px;
         height: 18px;
-        color: #0F8342; /* Vert */
+        color: var(--footer-color);
     }
 
     /* Marqueur et cercle sur la carte */
     .leaflet-marker-icon {
-        filter: hue-rotate(45deg); /* Ajustez l'angle pour obtenir la couleur souhaitée */
+        filter: hue-rotate(0deg) brightness(1.2);
     }
 
     .leaflet-interactive {
-        stroke: #F08F30; /* Contour en orange */
-        fill: #F08F30; /* Remplissage en orange */
+        stroke: #FF0000;
+        fill: #FF0000;
         fill-opacity: 0.3;
-    }
-
-    /* Icônes d'information */
-    .info-value i.ri-direction-fill,
-    .info-value i.ri-information-fill,
-    .info-value i.ri-community-fill,
-    .info-value i.ri-building-fill {
-        color: #0F8342 !important; /* Vert */
     }
 
     /* Texte "Voir plus" */
     .see-more {
-        color: #0F8342 !important; /* Vert */
+        color: var(--accent-color) !important;
         cursor: pointer;
         font-size: 0.9em;
         margin-top: 4px;
         display: none;
-    }
-</style>
-
-<style>
-    .description-scroll {
-      max-height: 4.5em;
-      overflow: hidden;
-      position: relative;
-      transition: max-height 0.3s ease;
+        font-weight: bold;
+        text-align: right;
     }
 
-    .description-scroll.expanded {
-      max-height: none;
+    /* Adaptation mobile */
+    @media (max-width: 768px) {
+        .info-row {
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .info-group {
+            width: 100%;
+        }
+        
+        .description-with-photo {
+            flex-direction: column;
+        }
+        
+        .photo-personnalite-container {
+            width: 60px;
+            height: 60px;
+            margin: 0 auto 10px;
+        }
+
+        .suggestion-submit {
+            position: relative;
+            bottom: auto;
+            right: auto;
+            margin-top: 10px;
+        }
+
+        .suggestion-input:focus + .suggestion-row .suggestion-submit {
+            bottom: auto;
+            right: auto;
+        }
     }
-
-    .see-more {
-      color: #0F8342; /* Vert */
-      cursor: pointer;
-      font-size: 0.9em;
-      margin-top: 4px;
-      display: none;
-    }
-
-
-    /* Style pour la photo de personnalité */
-.personnalite-photo {
-    width: 80px;
-    height: 80px;
-    border-radius: 8px;
-    object-fit: cover;
-    border: 2px solid #0F8342;
-    margin-right: 15px;
-    float: left;
-}
-
-.description-with-photo {
-    display: flex;
-    align-items: flex-start;
-}
-
-.description-content {
-    flex: 1;
-}
 </style>
 </head>
 <body>
     <!-- Navbar fixe -->
     <nav class="navbar">
-        <img src="{% static 'image/logo_qrcode.png' %}" alt="PADA" class="navbar-logo">
+        <img src="{% static 'image/logo.png' %}" alt="PADA" class="navbar-logo">
+        <div class="navbar-title">ADRESSAGE COTE D'IVOIRE</div>
     </nav>
-    
 
     <!-- Overlay pour le menu de partage -->
     <div class="share-overlay" id="shareOverlay" onclick="closeShareMenu()"></div>
@@ -638,51 +639,19 @@
             </div>
         </div>
 
-        <!-- Description -->
-       
         <!-- Informations -->
         <section class="info-section">
-            <form action="{% url 'redirect_view' %}" method="post">
-                <div class="info-group street-name">
-                    <div class="info-label street">
-                        <span>Nom de la voie</span>
-                    </div>
-                    {% if typologie %}
-                    <div class="typology-display">
-                        <i class="{{ typologie_icon }}"></i>
-                        <span>{{ typologie|capfirst }}</span>
-                    </div>
-                    {% endif %}
-                </div>
-
+            <div class="info-group">
+                <div class="info-label">Nom de la voie</div>
                 <div class="info-value">
                     <i class="ri-direction-fill"></i>
                     <span>{{ nom_rue }}</span>
                 </div>
-                <div class="info-group">
-                    <div class="info-label">
-                        <span>Description</span>
-                    </div>
-                    <div class="info-value">
-                        <i class="ri-information-fill"></i>
-                        <div class="{% if has_personnalite_photo %}description-with-photo{% endif %}">
-                            {% if has_personnalite_photo and photo_personnalite %}
-                            <img src="{{ photo_personnalite }}" alt="Photo de la personnalité" class="personnalite-photo">
-                            {% endif %}
-                            <div class="description-content">
-                                <div class="description-scroll" id="desc">
-                                    <span id="desc-text">{{ description_rue }}</span>
-                                </div>
-                                <div class="see-more" id="see-more" onclick="toggleDescription()">Voir plus</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+            </div>
 
+            <div class="info-row">
                 <div class="info-group">
-                    <div class="info-label">
-                        <span>Quartier</span>
-                    </div>
+                    <div class="info-label">Quartier</div>
                     <div class="info-value">
                         <i class="ri-community-fill"></i>
                         <span>{{ quartier_rue }}</span>
@@ -690,43 +659,73 @@
                 </div>
 
                 <div class="info-group">
-                    <div class="info-label">
-                        <span>Commune</span>
-                    </div>
+                    <div class="info-label">Commune</div>
                     <div class="info-value">
                         <i class="ri-building-fill"></i>
                         <span>{{ commune_rue }}</span>
                     </div>
                 </div>
-            </form>
+            </div>
+
+            <div class="info-group">
+                <div class="info-label">Description</div>
+                <div class="info-value">
+                    <div class="description-with-photo">
+                        {% if has_personnalite_photo and photo_personnalite %}
+                        <div class="photo-personnalite-container">
+                            <img src="{{ photo_personnalite }}" 
+                                 alt="Photo de {{ nom_rue }}" 
+                                 class="photo-personnalite"
+                                 onerror="this.parentElement.style.display='none'">
+                        </div>
+                        {% endif %}
+                        <div class="description-content">
+                            <div class="description-scroll" id="desc">
+                                <i class="ri-information-fill"></i>
+                                <span id="desc-text">{{ description_rue }}</span>
+                            </div>
+                            <div class="see-more" id="see-more" onclick="toggleDescription()">Voir plus</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <!-- Section Suggestion -->
-        <form id="suggestionForm" class="suggestion-form" data-url="/{{ qr_code }}/submit-suggestion/">
-            {% csrf_token %}
-            <textarea name="suggestion" class="suggestion-input" required placeholder="Vos idées pour améliorer cette voie..."></textarea>
-            <button type="submit" class="suggestion-submit">
-                <i class="ri-send-plane-fill"></i> Envoyer
-            </button>
-        </form>
-        <div id="formFeedback"></div>
+        <section class="suggestion-section">
+            <div class="suggestion-title">
+                <i class="ri-chat-3-fill"></i>
+                <span>Vos suggestions</span>
+            </div>
+            <form id="suggestionForm" class="suggestion-form" data-url="/{{ qr_code }}/submit-suggestion/">
+                {% csrf_token %}
+                <div class="suggestion-input-container">
+                    <textarea name="suggestion" class="suggestion-input" required placeholder="Vos idées pour améliorer cette voie..."></textarea>
+                    <div class="suggestion-row">
+                        <button type="submit" class="suggestion-submit">
+                            <i class="ri-send-plane-fill"></i> Envoyer
+                        </button>
+                    </div>
+                </div>
+                <div id="formFeedback"></div>
+            </form>
+        </section>
     </div>
 
     <!-- Footer -->
     <footer class="footer">
-        <div class="footer-partners">
-            <img src="{% static 'image/MCLU.png' %}" alt="Partenaire 1" class="partner-logo partner1">
-            <img src="{% static 'image/BNETD.png' %}" alt="Partenaire 2" class="partner-logo partner2">
-            <img src="{% static 'image/PACOGA.png' %}" alt="Partenaire 3" class="partner-logo partner3">
+        <div class="footer-content">
+            <div class="footer-partners">
+                <img src="{% static 'image/logo_mclu.png' %}" alt="Partenaire 1" class="partner-logo partner1">
+                <img src="{% static 'image/logo_bnetd.png' %}" alt="Partenaire 2" class="partner-logo partner2">
+                <img src="{% static 'image/logo_pacoga.png' %}" alt="Partenaire 3" class="partner-logo partner3">
+            </div>
+            <div class="footer-copyright">© 2025 BNETD. Tous droits réservés. | Infoline: 1378</div>
         </div>
-        <div>© 2025 BNETD. Tous droits réservés. | Infoline: 1378</div>
     </footer>
 
     <script>
         // Initialisation de la carte
-        console.log("X: ", "{{ x|escapejs }}");
-        console.log("Y: ", "{{ y|escapejs }}");
-
         var x = parseFloat("{{ x|escapejs }}");
         var y = parseFloat("{{ y|escapejs }}");
         var staticZoom = 18;
@@ -787,20 +786,20 @@
             }
         }
 
-        // Marqueur et cercle - couleur changée en orange
+        // Marqueur et cercle - couleur changée en rouge
         var marker = L.marker([y, x], {
             icon: L.icon({
-                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-orange.png', // Changé en orange
-                iconSize: [20, 34],
-                iconAnchor: [10, 34]
+                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+                iconSize: [25, 41],
+                iconAnchor: [12, 41]
             })
         }).addTo(map);
 
         var circle = L.circle([y, x], {
-            radius: 25,
-            color: '#F08F30', // Orange
-            fillColor: '#F08F30', // Orange
-            fillOpacity: 0.3
+            radius: 15,
+            color: '#FF0000',
+            fillColor: '#FF0000',
+            fillOpacity: 0.2
         }).addTo(map);
 
         // Contrôle de localisation
@@ -817,7 +816,7 @@
         });
         map.addControl(new locateControl({ position: 'topright' }));
 
-        // Fonctions de partage avec lien Google Maps
+        // Fonctions de partage
         function generateGoogleMapsUrl() {
             return `https://www.google.com/maps?q=${y},${x}`;
         }
@@ -860,7 +859,7 @@
             });
         }
 
-        // Gestion du menu de partage avec animation
+        // Gestion du menu de partage
         function toggleShareMenu() {
             const shareMenu = document.getElementById('shareMenu');
             const shareOverlay = document.getElementById('shareOverlay');
@@ -881,7 +880,6 @@
             shareMenu.classList.add('active');
             shareOverlay.classList.add('active');
 
-            // Animation d'apparition successive
             shareCards.forEach((card, index) => {
                 setTimeout(() => {
                     card.style.opacity = '1';
@@ -895,7 +893,6 @@
             const shareOverlay = document.getElementById('shareOverlay');
             const shareCards = document.querySelectorAll('.share-card');
 
-            // Animation de disparition inverse
             shareCards.forEach((card, index) => {
                 setTimeout(() => {
                     card.style.opacity = '0';
@@ -909,7 +906,6 @@
             }, shareCards.length * 50);
         }
 
-        // Fermer le menu de partage quand on clique en dehors
         document.addEventListener('click', function(e) {
             const shareMenu = document.getElementById('shareMenu');
             const mapShareBtn = document.querySelector('.map-share-btn');
@@ -954,36 +950,38 @@
     </script>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-          const desc = document.getElementById("desc");
-          const seeMore = document.getElementById("see-more");
+        document.addEventListener("DOMContentLoaded", function() {
+            const desc = document.getElementById("desc");
+            const seeMore = document.getElementById("see-more");
+            const descText = document.getElementById("desc-text");
 
-          // Crée une copie du contenu pour mesurer sans contrainte
-          const clone = desc.cloneNode(true);
-          clone.style.maxHeight = "none";
-          clone.style.visibility = "hidden";
-          clone.style.position = "absolute";
-          clone.style.height = "auto";
-          document.body.appendChild(clone);
+            // Vérifie si le texte dépasse la hauteur maximale
+            function checkTextOverflow() {
+                if (desc.scrollHeight > desc.offsetHeight) {
+                    seeMore.style.display = "inline";
+                } else {
+                    seeMore.style.display = "none";
+                }
+            }
 
-          if (clone.scrollHeight > desc.offsetHeight) {
-            seeMore.style.display = "inline";
-          }
+            // Vérification initiale
+            checkTextOverflow();
 
-          document.body.removeChild(clone);
+            // Ré-verifie après le chargement des polices et images
+            window.addEventListener('load', checkTextOverflow);
         });
 
         function toggleDescription() {
-          const desc = document.getElementById("desc");
-          const seeMore = document.getElementById("see-more");
+            const desc = document.getElementById("desc");
+            const seeMore = document.getElementById("see-more");
 
-          if (desc.classList.contains("expanded")) {
-            desc.classList.remove("expanded");
-            seeMore.innerText = "Voir plus";
-          } else {
-            desc.classList.add("expanded");
-            seeMore.innerText = "Voir moins";
-          }
+            if (desc.classList.contains("expanded")) {
+                desc.classList.remove("expanded");
+                seeMore.innerText = "Voir plus";
+            } else {
+                desc.classList.add("expanded");
+                seeMore.innerText = "Voir moins";
+            }
         }
     </script>
 </body>
