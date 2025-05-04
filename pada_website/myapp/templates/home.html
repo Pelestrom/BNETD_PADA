@@ -13,10 +13,12 @@
     :root {
         --primary-color: #0f172a;
         --secondary-color: #1e293b;
-        --accent-color: #FF0000;
-        --footer-color: #02091EFF;
+        --accent-color: #f08f30;
+        --footer-color: #000000;
         --text-color: #0f172a;
         --bg-color: #f8fafc;
+        --icon-color: #0F8342;
+        --marker-color: #ff0000;
     }
 
     * {
@@ -54,7 +56,7 @@
     }
 
     .navbar-logo {
-        height: 55px;
+        height: 65px;
         width: auto;
         transition: transform 0.3s ease;
     }
@@ -101,14 +103,22 @@
 
     .info-row {
         display: flex;
-        flex-wrap: wrap;
         gap: 15px;
         margin-bottom: 15px;
+        margin-top: 8px;
     }
 
     .info-group {
         flex: 1;
         min-width: 120px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .info-value {
+        flex: 1;
+        display: flex;
+        min-height: 60px; /* Hauteur fixe pour uniformiser */
     }
 
     .info-label {
@@ -129,7 +139,7 @@
 
     .info-value i {
         margin-right: 10px;
-        color: black; /* Icônes en noir */
+        color: var(--icon-color);
     }
 
     .info-value span {
@@ -247,7 +257,7 @@
     }
 
     .leaflet-control-zoom a {
-        color: var(--footer-color);
+        color: var(--icon-color);
         width: 24px;
         height: 24px;
         line-height: 24px;
@@ -266,7 +276,7 @@
 
     .leaflet-control-custom i {
         font-size: 1rem;
-        color: var(--footer-color);
+        color: var(--icon-color);
     }
 
     .layer-menu {
@@ -308,24 +318,26 @@
         background-color: var(--footer-color);
         color: white;
         text-align: center;
-        padding: 5px 10px;
+        padding: 10px;
         font-size: 0.65rem;
         position: fixed;
         bottom: 0;
         left: 0;
         right: 0;
         z-index: 999;
-        height: 45px;
+        height: auto;
     }
 
     .footer-content {
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: center;
+        height: 100%;
     }
 
     .footer-copyright {
-        margin-top: 5px;
+        margin-top: 8px;
         color: #f8f9fa;
     }
 
@@ -353,7 +365,7 @@
         height: 80px;
         border-radius: 8px;
         overflow: hidden;
-        border: 1px solid var(--footer-color);
+        border: 1px solid var(--icon-color);
         flex-shrink: 0;
     }
 
@@ -366,6 +378,8 @@
 
     .description-content {
         flex: 1;
+        display: flex;
+        flex-direction: column;
     }
 
     /* Styles pour la section suggestion */
@@ -386,7 +400,7 @@
 
     .suggestion-title i {
         margin-right: 8px;
-        color: black; /* Icône en noir */
+        color: var(--icon-color);
     }
 
     .suggestion-form {
@@ -414,7 +428,7 @@
     .suggestion-input:focus {
         outline: none;
         border-color: var(--accent-color);
-        box-shadow: 0 0 0 2px rgba(255, 0, 0, 0.1);
+        box-shadow: 0 0 0 2px rgba(240, 143, 48, 0.1);
         min-height: 100px;
     }
 
@@ -466,6 +480,8 @@
         overflow: hidden;
         position: relative;
         transition: max-height 0.3s ease;
+        display: flex;
+        align-items: flex-start;
     }
 
     .description-scroll.expanded {
@@ -486,9 +502,11 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        gap: 10px;
+        gap: 15px; /* Augmentation de l'espace entre les logos */
+        margin-bottom: 50px;
+        flex-wrap: wrap;
+        padding: 0 20px;
     }
-
     .footer-partners img {
         height: 30px;
         width: auto;
@@ -497,19 +515,20 @@
     }
 
     .footer-partners img.partner1 {
-        height: 35px;
+        height: 23px;
+        margin-bottom: 5px;
     }
     
     .footer-partners img.partner2 {
-        height: 25px;
+        height: 24px;
     }
     
     .footer-partners img.partner3 {
-        height: 30px;
+        height: 37px;
     }
 
     .footer-partners img:hover {
-        opacity: 1;
+        opacity: 2;
     }
 
     /* Style pour le bouton de partage sur la carte */
@@ -539,18 +558,20 @@
     .map-share-btn svg {
         width: 18px;
         height: 18px;
-        color: var(--footer-color);
+        color: var(--icon-color);
     }
 
     /* Marqueur et cercle sur la carte */
     .leaflet-marker-icon {
-        filter: hue-rotate(0deg) brightness(1.2);
+        filter: hue-rotate(0deg) brightness(1.2) saturate(2);
+        height: 36px !important;
+        width: 25px !important;
     }
 
     .leaflet-interactive {
-        stroke: #FF0000;
-        fill: #FF0000;
-        fill-opacity: 0.3;
+        stroke: var(--marker-color);
+        fill: var(--marker-color);
+        fill-opacity: 0.1;
     }
 
     /* Texte "Voir plus" */
@@ -562,27 +583,35 @@
         display: none;
         font-weight: bold;
         text-align: right;
+        align-self: flex-end;
+        margin-left: auto;
     }
 
     /* Adaptation mobile */
     @media (max-width: 768px) {
-        .info-row {
-            flex-direction: column;
-            gap: 10px;
-        }
-        
         .info-group {
-            width: 100%;
+            min-width: calc(50% - 8px);
         }
         
         .description-with-photo {
+            display: flex;
             flex-direction: column;
+            align-items: center;
+            gap: 15px;
         }
-        
+    
         .photo-personnalite-container {
-            width: 60px;
-            height: 60px;
-            margin: 0 auto 10px;
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--icon-color);
+            flex-shrink: 0;
+            margin: 0 auto;
+        }
+    
+        .description-content {
+            width: 100%;
         }
 
         .suggestion-submit {
@@ -602,8 +631,7 @@
 <body>
     <!-- Navbar fixe -->
     <nav class="navbar">
-        <img src="{% static 'image/logo.png' %}" alt="PADA" class="navbar-logo">
-        <div class="navbar-title">ADRESSAGE COTE D'IVOIRE</div>
+        <img src="{% static 'image/BD_ADRESSAGE.png' %}" alt="BD_ADRESSAGE" class="navbar-logo">
     </nav>
 
     <!-- Overlay pour le menu de partage -->
@@ -668,7 +696,7 @@
             </div>
 
             <div class="info-group">
-                <div class="info-label">Description</div>
+                <div class="info-label">Information sur le nom de la voie</div>
                 <div class="info-value">
                     <div class="description-with-photo">
                         {% if has_personnalite_photo and photo_personnalite %}
@@ -684,7 +712,7 @@
                                 <i class="ri-information-fill"></i>
                                 <span id="desc-text">{{ description_rue }}</span>
                             </div>
-                            <div class="see-more" id="see-more" onclick="toggleDescription()">Voir plus</div>
+                            <div class="see-more" id="see-more" onclick="toggleDescription()">Plus</div>
                         </div>
                     </div>
                 </div>
@@ -694,8 +722,8 @@
         <!-- Section Suggestion -->
         <section class="suggestion-section">
             <div class="suggestion-title">
-                <i class="ri-chat-3-fill"></i>
-                <span>Vos suggestions</span>
+                <i class="ri-message-fill"></i>
+                <span>Suggestions</span>
             </div>
             <form id="suggestionForm" class="suggestion-form" data-url="/{{ qr_code }}/submit-suggestion/">
                 {% csrf_token %}
@@ -713,14 +741,16 @@
     </div>
 
     <!-- Footer -->
+    <div class="footer-partners">
+        <img src="{% static 'image/MCLU.png' %}" alt="Partenaire 1" class="partner-logo partner1">
+        <img src="{% static 'image/BNETD.png' %}" alt="Partenaire 2" class="partner-logo partner2">
+        <img src="{% static 'image/PACOGA.png' %}" alt="Partenaire 3" class="partner-logo partner3">
+    </div>
+    
     <footer class="footer">
         <div class="footer-content">
-            <div class="footer-partners">
-                <img src="{% static 'image/logo_mclu.png' %}" alt="Partenaire 1" class="partner-logo partner1">
-                <img src="{% static 'image/logo_bnetd.png' %}" alt="Partenaire 2" class="partner-logo partner2">
-                <img src="{% static 'image/logo_pacoga.png' %}" alt="Partenaire 3" class="partner-logo partner3">
-            </div>
-            <div class="footer-copyright">© 2025 BNETD. Tous droits réservés. | Infoline: 1378</div>
+            <div class="footer-copyright">© 2025 CENTRALE D'ADRESSAGE. Tous droits réservés</div>
+            <div>Infoline: 1378</div>
         </div>
     </footer>
 
@@ -790,17 +820,23 @@
         var marker = L.marker([y, x], {
             icon: L.icon({
                 iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
                 iconSize: [25, 41],
-                iconAnchor: [12, 41]
+                iconAnchor: [12, 41],
+                popupAnchor: [1, -34],
+                shadowSize: [41, 41]
             })
         }).addTo(map);
-
+        
         var circle = L.circle([y, x], {
             radius: 15,
-            color: '#FF0000',
-            fillColor: '#FF0000',
-            fillOpacity: 0.2
+            color: '#cc0000',      // Contour rouge
+            weight: 1,             // Épaisseur fine
+            fillColor: '#ff0000',  // Rouge vif
+            fillOpacity: 0.3       // Plus de transparence
         }).addTo(map);
+        
+        
 
         // Contrôle de localisation
         var locateControl = L.Control.extend({
@@ -977,10 +1013,12 @@
 
             if (desc.classList.contains("expanded")) {
                 desc.classList.remove("expanded");
-                seeMore.innerText = "Voir plus";
+                seeMore.innerText = "Plus";
+                // Faire remonter en haut de la description
+                desc.scrollTop = 0;
             } else {
                 desc.classList.add("expanded");
-                seeMore.innerText = "Voir moins";
+                seeMore.innerText = "Moins";
             }
         }
     </script>
