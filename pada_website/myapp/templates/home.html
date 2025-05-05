@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
+    <link rel="icon" type="image/jpeg" href="{% static 'image/logo_pavi.png' %}">
+    <title>panneautage.bnetd.ci</title>
+
 
     <style>
     :root {
@@ -49,31 +52,33 @@
         background-color: white;
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        justify-content: flex-start; /* <-- mettre les éléments au début */
         padding: 0 20px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         z-index: 1000;
     }
-
+    
     .navbar-logo {
         height: 65px;
         width: auto;
         transition: transform 0.3s ease;
     }
-    
-    .navbar-title {
-        font-size: 1rem;
-        font-weight: bold;
-        color: var(--footer-color);
-        position: absolute;
-        left: 50%;
-        transform: translateX(-50%);
-        white-space: nowrap;
+
+    .second-logo {
+        height: 55px;
+        width: auto;
+        transition: transform 0.3s ease;
     }
-   
+    
     .navbar-logo:active {
         transform: scale(0.95);
     }
+    
+    /* Ajouter un petit espace entre les deux logos */
+    .navbar-logo + .navbar-logo {
+        margin-left: 3px; uste la valeur pour l'espacement */
+    }
+    
      
     /* Contenu principal */
     .main-content {
@@ -515,17 +520,22 @@
     }
 
     .footer-partners img.partner1 {
-        height: 23px;
+        height: 20px;
         margin-bottom: 5px;
     }
     
     .footer-partners img.partner2 {
-        height: 24px;
+        height: 20px;
     }
     
     .footer-partners img.partner3 {
         height: 37px;
     }
+
+    .footer-partners img.partner4{
+        height: 50px;
+    }
+
 
     .footer-partners img:hover {
         opacity: 2;
@@ -626,13 +636,22 @@
             right: auto;
         }
     }
+
+    .small-marker {
+        width: 10px !important;
+        height: 16px !important;
+        background-size: contain !important;
+        background-repeat: no-repeat !important;
+    }
+    
 </style>
 </head>
 <body>
     <!-- Navbar fixe -->
     <nav class="navbar">
         <img src="{% static 'image/BD_ADRESSAGE.png' %}" alt="BD_ADRESSAGE" class="navbar-logo">
-    </nav>
+        <img src="{% static 'image/armoirie.png' %}" alt="Second-Logo" class="navbar-logo second-logo">
+    </nav>      
 
     <!-- Overlay pour le menu de partage -->
     <div class="share-overlay" id="shareOverlay" onclick="closeShareMenu()"></div>
@@ -679,18 +698,17 @@
 
             <div class="info-row">
                 <div class="info-group">
-                    <div class="info-label">Quartier</div>
-                    <div class="info-value">
-                        <i class="ri-community-fill"></i>
-                        <span>{{ quartier_rue }}</span>
-                    </div>
-                </div>
-
-                <div class="info-group">
                     <div class="info-label">Commune</div>
                     <div class="info-value">
                         <i class="ri-building-fill"></i>
                         <span>{{ commune_rue }}</span>
+                    </div>
+                </div>
+                <div class="info-group">
+                    <div class="info-label">Quartier</div>
+                    <div class="info-value">
+                        <i class="ri-community-fill"></i>
+                        <span>{{ quartier_rue }}</span>
                     </div>
                 </div>
             </div>
@@ -728,7 +746,7 @@
             <form id="suggestionForm" class="suggestion-form" data-url="/{{ qr_code }}/submit-suggestion/">
                 {% csrf_token %}
                 <div class="suggestion-input-container">
-                    <textarea name="suggestion" class="suggestion-input" required placeholder="Vos idées pour améliorer cette voie..."></textarea>
+                    <textarea name="suggestion" class="suggestion-input" required placeholder="Vos compléments d'informations sur la voie..."></textarea>
                     <div class="suggestion-row">
                         <button type="submit" class="suggestion-submit">
                             <i class="ri-send-plane-fill"></i> Envoyer
@@ -745,6 +763,8 @@
         <img src="{% static 'image/MCLU.png' %}" alt="Partenaire 1" class="partner-logo partner1">
         <img src="{% static 'image/BNETD.png' %}" alt="Partenaire 2" class="partner-logo partner2">
         <img src="{% static 'image/PACOGA.png' %}" alt="Partenaire 3" class="partner-logo partner3">
+        <img src="{% static 'image/banque mondiale.png' %}" alt="partenaire 4" class="partner-logo partner4">
+
     </div>
     
     <footer class="footer">
@@ -816,26 +836,35 @@
             }
         }
 
-        // Marqueur et cercle - couleur changée en rouge
-        var marker = L.marker([y, x], {
-            icon: L.icon({
-                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
-                shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-                iconSize: [25, 41],
-                iconAnchor: [12, 41],
-                popupAnchor: [1, -34],
-                shadowSize: [41, 41]
-            })
-        }).addTo(map);
-        
-        var circle = L.circle([y, x], {
-            radius: 15,
-            color: '#cc0000',      // Contour rouge
-            weight: 1,             // Épaisseur fine
-            fillColor: '#ff0000',  // Rouge vif
-            fillOpacity: 0.3       // Plus de transparence
-        }).addTo(map);
-        
+    // Taille de l'icône CSS
+var iconWidth = 10; // Largeur de l'icône
+var iconHeight = 16; // Hauteur de l'icône
+
+// Marqueur avec icône personnalisée
+var marker = L.marker([y, x], {
+    icon: L.icon({
+        iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+        iconSize: [iconWidth, iconHeight],  // Appliquer la taille CSS à l'icône
+        iconAnchor: [iconWidth / 2, iconHeight], // Centrer l'icône sur le marqueur
+        popupAnchor: [0, -iconHeight],
+        shadowSize: [41, 41],
+        className: 'small-marker'  // nom de ta classe CSS personnalisée
+    })
+}).addTo(map);
+
+// Ajuster le rayon du cercle pour qu'il soit légèrement plus grand que l'icône
+var circleRadius = Math.max(iconWidth, iconHeight) / 2 + 5;  // Rayon du cercle basé sur la taille de l'icône
+
+// Cercle autour du marqueur
+var circle = L.circle([y, x], {
+    radius: circleRadius,  // Rayon ajusté
+    color: '#cc0000',
+    weight: 1,
+    fillColor: '#ff0000',
+    fillOpacity: 0.3
+}).addTo(map);
+
         
 
         // Contrôle de localisation
