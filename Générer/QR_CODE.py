@@ -1,7 +1,7 @@
 import qrcode  # type: ignore
 
 # URL avec niveau de zoom
-url = "http://192.168.133.104:8000/00216P3379/"                                       
+url = "https://panneautage.bnetd.ci/00212P7991/"                                       
 
 # Création de l'objet QRCode
 qr = qrcode.QRCode(
@@ -19,4 +19,4 @@ qr.make(fit=True)
 img = qr.make_image(fill_color="MidnightBlue", back_color="white")
 
 # Enregistrement de l'image du code QR
-img.save("photo.png")
+img.save("port.png")
