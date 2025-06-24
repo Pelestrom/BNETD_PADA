@@ -5,7 +5,6 @@ from .models import Voie
 from .forms import SuggestionForm
 from django.http import FileResponse
 import os
-from django.shortcuts import render, get_object_or_404
 from django.conf import settings
 
 def home_view(request, qr_code):

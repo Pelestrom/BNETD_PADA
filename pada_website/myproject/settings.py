@@ -28,8 +28,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'myapp',
+    'myapp',  # Application personnalisée créée pour le projet
 ]
+
 # AUTH_USER_MODEL = 'myapp.customuser' 
 
 MIDDLEWARE = [
@@ -68,17 +69,12 @@ WSGI_APPLICATION = 'myproject.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'db_qrcode',
-        'USER': 'postgres',
-        'PASSWORD': '0140087183',
-        'HOST': 'localhost',  # ou l'adresse de votre serveur PostgreSQL
+        'ENGINE': 'django.db.backends.postgresql', # Indique que le moteur utilisé est PostgreSQL
+        'NAME': 'db_qrcode', # Nom de la base de données PostgreSQL
+        'USER': 'postgres', # Nom d'utilisateur pour se connecter à PostgreSQL
+        'PASSWORD': '0140087183', # Mot de passe de l'utilisateur PostgreSQL
+        'HOST': 'localhost',  # l'adresse de votre serveur PostgreSQL
         'PORT': '5432',  # le port par défaut pour PostgreSQL
-    }
-    ,
-    'sqlite': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -119,10 +115,12 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-BASE_URL = 'http//127.0.0.1:8000'  # À adapter
-STATIC_URL = 'static/'
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# BASE_URL = 'http://127.0.0.1:8000'  # À adapter
+
+STATIC_URL = 'static/'  # Spécifie l'URL de base pour accéder aux fichiers statiques (images)
+MEDIA_URL = '/media/'  # Spécifie l'URL de base pour accéder aux fichiers médias  
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Définit le répertoire sur le disque où seront stockés les fichiers médias
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

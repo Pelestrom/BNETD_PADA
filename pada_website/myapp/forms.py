@@ -1,6 +1,5 @@
 from django import forms
 from .models import Suggestion
-from django.contrib.auth.forms import AuthenticationForm
 
 class SuggestionForm(forms.ModelForm):
     class Meta:

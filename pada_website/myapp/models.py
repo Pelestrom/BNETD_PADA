@@ -14,7 +14,7 @@ class Voie(models.Model):
     description = models.CharField(max_length=255)
     entites_territoriales_2 = models.TextField()
     photo_personnalite = models.CharField(max_length=255, null=True, blank=True)
-
+    
     class Meta:
         db_table = 'panneautage'
         managed = False
@@ -27,20 +27,16 @@ class Voie(models.Model):
         """Vérifie si une photo est associée"""
         return bool(self.photo_personnalite)
     
- 
-
     def get_absolute_photo_url(self):
         """
         Génère l'URL complète de la photo selon le format souhaité :
         /code_panneau/media/chemin_photo
         """
         if not self.photo_personnalite:
-            return None
-            
+            return None    
         # Si c'est déjà une URL complète
         if self.photo_personnalite.startswith(('http://', 'https://')):
-            return self.photo_personnalite
-            
+            return self.photo_personnalite   
         # Nettoyage du code QR pour l'URL
         qr_code = self.qr_code.replace('https://panneautage.bnetd.ci/', '').strip('/')
         
