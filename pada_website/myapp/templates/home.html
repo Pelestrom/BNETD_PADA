@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css" rel="stylesheet">
@@ -643,7 +644,28 @@
         background-size: contain !important;
         background-repeat: no-repeat !important;
     }
-    
+ 
+ .g-recaptcha {
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: center;
+}
+
+/* Pour les petits écrans */
+@media (max-width: 480px) {
+    .g-recaptcha {
+        transform: scale(0.85);
+        transform-origin: left top;
+    }
+}
+
+ /* Pour les écrans très petits */
+    @media (max-width: 320px) {
+        .g-recaptcha {
+            transform: scale(0.75);
+            transform-origin: left top;
+        }
+    }   
 </style>
 </head>
 <body>
@@ -737,25 +759,27 @@
             </div>
         </section>
 
-        <!-- Section Suggestion -->
-        <section class="suggestion-section">
-            <div class="suggestion-title">
-                <i class="ri-message-fill"></i>
-                <span>Suggestions</span>
+<!-- Section Suggestion -->
+<section class="suggestion-section">
+    <div class="suggestion-title">
+        <i class="ri-message-fill"></i>
+        <span>Suggestions</span>
+    </div>
+    <form id="suggestionForm" class="suggestion-form" data-url="/{{ qr_code }}/submit-suggestion/">
+        {% csrf_token %}
+        <div class="suggestion-input-container">
+            <textarea name="suggestion" class="suggestion-input" required placeholder="Vos compléments d'informations sur la voie..."></textarea>
+            <div class="suggestion-row">
+                <!-- Ajout du CAPTCHA -->
+                <div class="g-recaptcha" data-sitekey="6Ldn8mwrAAAAABCGzXdgfedSKlnhu6Ek3vHz2d_6"></div>
+                <button type="submit" class="suggestion-submit">
+                    <i class="ri-send-plane-fill"></i> Envoyer
+                </button>
             </div>
-            <form id="suggestionForm" class="suggestion-form" data-url="/{{ qr_code }}/submit-suggestion/">
-                {% csrf_token %}
-                <div class="suggestion-input-container">
-                    <textarea name="suggestion" class="suggestion-input" required placeholder="Vos compléments d'informations sur la voie..."></textarea>
-                    <div class="suggestion-row">
-                        <button type="submit" class="suggestion-submit">
-                            <i class="ri-send-plane-fill"></i> Envoyer
-                        </button>
-                    </div>
-                </div>
-                <div id="formFeedback"></div>
-            </form>
-        </section>
+        </div>
+        <div id="formFeedback"></div>
+    </form>
+</section>
     </div>
 
     <!-- Footer -->
@@ -982,11 +1006,22 @@ var circle = L.circle([y, x], {
     </script>
 
     <script>
-        document.getElementById('suggestionForm').addEventListener('submit', function(e) {
+            document.getElementById('suggestionForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const formData = new FormData(this);
             const feedback = document.getElementById('formFeedback');
             const url = this.dataset.url;
+            
+            // Vérification du CAPTCHA
+            const recaptchaResponse = grecaptcha.getResponse();
+            if (!recaptchaResponse) {
+                feedback.innerHTML = '<p class="error"><i class="ri-error-warning-fill"></i> Veuillez valider le CAPTCHA</p>';
+                setTimeout(() => feedback.innerHTML = '', 5000);
+                return;
+            }
+            
+            // Ajouter la réponse du CAPTCHA aux données du formulaire
+            formData.append('g-recaptcha-response', recaptchaResponse);
 
             fetch(url, {
                 method: 'POST',
@@ -1001,9 +1036,13 @@ var circle = L.circle([y, x], {
                 if (data.status === 'success') {
                     feedback.innerHTML = '<p class="success"><i class="ri-checkbox-circle-fill"></i> Merci pour votre suggestion !</p>';
                     this.reset();
+                    // Réinitialiser le CAPTCHA
+                    grecaptcha.reset();
                 } else {
-                    const errors = data.errors?.suggestion?.[0] || 'Une erreur est survenue';
+                    const errors = data.errors?.suggestion?.[0] || data.message || 'Une erreur est survenue';
                     feedback.innerHTML = `<p class="error"><i class="ri-error-warning-fill"></i> ${errors}</p>`;
+                    // Réinitialiser le CAPTCHA en cas d'erreur
+                    grecaptcha.reset();
                 }
                 setTimeout(() => feedback.innerHTML = '', 5000);
             })

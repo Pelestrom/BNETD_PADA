@@ -6,6 +6,8 @@ from .forms import SuggestionForm
 from django.http import FileResponse
 import os
 from django.conf import settings
+import requests
+
 
 def home_view(request, qr_code):
     # Nettoyage du QR code
@@ -36,11 +38,32 @@ def redirect_view(request):
  
 @require_POST
 def submit_suggestion(request, qr_code):
-    # Nettoyez le qr_code comme dans home_view
+    # Vérification du CAPTCHA en premier
+    recaptcha_response = request.POST.get('g-recaptcha-response')
+    if not recaptcha_response:
+        return JsonResponse({
+            'status': 'error',
+            'message': 'Veuillez compléter le CAPTCHA'
+        }, status=400)
+
+    # Validation avec l'API Google reCAPTCHA
+    data = {
+        'secret': settings.RECAPTCHA_PRIVATE_KEY,
+        'response': recaptcha_response
+    }
+    r = requests.post('https://www.google.com/recaptcha/api/siteverify', data=data)
+    result = r.json()
+    
+    if not result.get('success'):
+        return JsonResponse({
+            'status': 'error',
+            'message': 'Validation CAPTCHA échouée. Veuillez réessayer.'
+        }, status=400)
+
+    # Suite du traitement original si CAPTCHA valide
     qr_code = qr_code.replace('https://panneautage.bnetd.ci/', '')
     full_qr_code = f"https://panneautage.bnetd.ci/{qr_code}"
     
-    # Essaye de récupérer la voie associée au QR code
     try:
         voie = get_object_or_404(Voie, qr_code=full_qr_code)
     except Voie.DoesNotExist:
@@ -49,19 +72,12 @@ def submit_suggestion(request, qr_code):
     form = SuggestionForm(request.POST)
     
     if form.is_valid():
-        # Crée une suggestion sans la sauvegarder tout de suite
         suggestion = form.save(commit=False)
-        
-        # Laisser le modèle gérer l'assignation de voie, nom_voie et qr_code_url
         suggestion.voie = voie
-        
-        # Sauvegarder la suggestion dans la base de données
         suggestion.save()
         
-        # Retourner un message de succès
         return JsonResponse({'status': 'success'})
     
-    # Si le formulaire est invalide, retourner les erreurs sous forme JSON
     return JsonResponse({'status': 'error', 'errors': form.errors}, status=400)
 
 
