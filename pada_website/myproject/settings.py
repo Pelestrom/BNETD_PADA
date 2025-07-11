@@ -74,7 +74,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.postgresql', # Indique que le moteur utilisé est PostgreSQL
         'NAME': 'db_qrcode', # Nom de la base de données PostgreSQL
         'USER': 'postgres', # Nom d'utilisateur pour se connecter à PostgreSQL
-        'PASSWORD': '0140087183', # Mot de passe de l'utilisateur PostgreSQL
+        'PASSWORD': 'postrgres', # Mot de passe de l'utilisateur PostgreSQL
         'HOST': 'localhost',  # l'adresse de votre serveur PostgreSQL
         'PORT': '5432',  # le port par défaut pour PostgreSQL
     }
